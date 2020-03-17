@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">HabitsTracker</string>
+    <string name="app_name">Habits Tracker</string>
+    <string name="habit_type_label">Type of the habit</string>
 </resources>
