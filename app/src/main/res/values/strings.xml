@@ -16,4 +16,5 @@
     <string name="periodicity_sentence_start">Repeat</string>
     <string name="periodicity_sentence_middle">times in</string>
     <string name="periodicity_sentence_end">days</string>
+    <string name="required_error">Required</string>
 </resources>

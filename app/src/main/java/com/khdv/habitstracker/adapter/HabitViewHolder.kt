@@ -10,13 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.khdv.habitstracker.R
 import com.khdv.habitstracker.model.Habit
 
-class HabitViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class HabitViewHolder(view: View, private val clickListener: HabitClickListener) :
+    RecyclerView.ViewHolder(view) {
 
     companion object {
-        fun create(parent: ViewGroup): HabitViewHolder {
+        fun create(parent: ViewGroup, clickListener: HabitClickListener): HabitViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val view = inflater.inflate(R.layout.item_habit, parent, false)
-            return HabitViewHolder(view)
+            return HabitViewHolder(view, clickListener)
         }
 
         private fun getPriorityLabelResource(priority: Habit.Priority) = when (priority) {
@@ -44,6 +45,7 @@ class HabitViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             setImageResource(getTypeImageResource(habit.type))
             setColorFilter(habit.color, PorterDuff.Mode.SRC_IN)
         }
+        itemView.setOnClickListener { clickListener.onClick(habit) }
     }
 
     private fun formatInfo(habit: Habit) = with(itemView.resources) {
