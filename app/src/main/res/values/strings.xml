@@ -5,4 +5,15 @@
     <string name="low_label">low</string>
     <string name="medium_label">medium</string>
     <string name="high_label">high</string>
+    <string name="title_label">Title</string>
+    <string name="description_label">Description</string>
+    <string name="useful_label">Useful</string>
+    <string name="harmful_label">Harmful</string>
+    <string name="priority_label">Priority</string>
+    <string name="quantity_label">Quantity</string>
+    <string name="periodicity_label">Periodicity</string>
+    <string name="save_label">Save</string>
+    <string name="periodicity_sentence_start">Repeat</string>
+    <string name="periodicity_sentence_middle">times in</string>
+    <string name="periodicity_sentence_end">days</string>
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/habit_item_padding">
+    android:padding="@dimen/layout_padding">
 
     <ImageView
         android:id="@+id/type"
@@ -20,7 +20,7 @@
         android:id="@+id/info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/habit_item_content_spacing"
+        android:layout_marginStart="@dimen/content_spacing"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
         app:layout_constraintStart_toEndOf="@+id/type"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +30,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/habit_item_content_spacing"
+        android:layout_marginStart="@dimen/content_spacing"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/type"
@@ -41,7 +41,7 @@
         android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/habit_item_content_spacing"
+        android:layout_marginStart="@dimen/content_spacing"
         android:maxLines="2"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         app:layout_constraintEnd_toEndOf="parent"
