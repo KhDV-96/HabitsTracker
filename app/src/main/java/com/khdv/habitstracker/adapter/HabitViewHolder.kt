@@ -31,7 +31,7 @@ class HabitViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    private val title = itemView.findViewById<TextView>(R.id.title)
+    private val title = itemView.findViewById<TextView>(R.id.title_view)
     private val description = itemView.findViewById<TextView>(R.id.description)
     private val info = itemView.findViewById<TextView>(R.id.info)
     private val typeImage = itemView.findViewById<ImageView>(R.id.type)
@@ -48,6 +48,6 @@ class HabitViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private fun formatInfo(habit: Habit) = with(itemView.resources) {
         val priority = getString(getPriorityLabelResource(habit.priority))
-        getString(R.string.habit_info_format, priority, habit.quantity)
+        getString(R.string.habit_info_format, priority, habit.quantity, habit.periodicity)
     }
 }

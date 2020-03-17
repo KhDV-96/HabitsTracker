@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Habits Tracker</string>
     <string name="habit_type_label">Type of the habit</string>
-    <string name="habit_info_format">%s • %d times</string>
+    <string name="habit_info_format">%s • %d times in %d days</string>
     <string name="low_label">low</string>
     <string name="medium_label">medium</string>
     <string name="high_label">high</string>

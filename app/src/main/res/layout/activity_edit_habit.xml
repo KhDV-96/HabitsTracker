@@ -17,11 +17,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/label_start_spacing"
-            android:labelFor="@id/title"
+            android:labelFor="@id/title_view"
             android:text="@string/title_label" />
 
         <EditText
-            android:id="@+id/title"
+            android:id="@+id/title_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -61,7 +61,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <RadioGroup
-                android:id="@+id/radioGroup"
+                android:id="@+id/type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="@+id/habit_type_label"
@@ -72,6 +72,7 @@
                     android:id="@+id/useful"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:checked="true"
                     android:text="@string/useful_label" />
 
                 <RadioButton
@@ -107,7 +108,7 @@
                 android:layout_marginTop="@dimen/content_spacing"
                 android:text="@string/periodicity_label"
                 app:layout_constraintStart_toStartOf="@+id/quantity_label"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+                app:layout_constraintTop_toBottomOf="@+id/type" />
 
             <TextView
                 android:id="@+id/quantity_label"
@@ -129,6 +130,7 @@
                 android:importantForAutofill="no"
                 android:inputType="number"
                 android:maxLength="3"
+                android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 app:layout_constraintBaseline_toBaselineOf="@+id/quantity_label"
                 app:layout_constraintStart_toEndOf="@+id/quantity_label" />
@@ -152,6 +154,7 @@
                 android:importantForAutofill="no"
                 android:inputType="number"
                 android:maxLength="3"
+                android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 app:layout_constraintBaseline_toBaselineOf="@+id/periodicity_label"
                 app:layout_constraintStart_toEndOf="@+id/periodicity_label" />
@@ -167,7 +170,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
-            android:id="@+id/save"
+            android:id="@+id/save_button"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
