@@ -1,4 +1,4 @@
-package com.khdv.habitstracker.adapter
+package com.khdv.habitstracker.screens.list
 
 import android.graphics.PorterDuff
 import android.view.LayoutInflater
@@ -17,7 +17,10 @@ class HabitViewHolder(view: View, private val clickListener: HabitClickListener)
         fun create(parent: ViewGroup, clickListener: HabitClickListener): HabitViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val view = inflater.inflate(R.layout.item_habit, parent, false)
-            return HabitViewHolder(view, clickListener)
+            return HabitViewHolder(
+                view,
+                clickListener
+            )
         }
 
         private fun getPriorityLabelResource(priority: Habit.Priority) = when (priority) {
@@ -42,14 +45,22 @@ class HabitViewHolder(view: View, private val clickListener: HabitClickListener)
         description.text = habit.description
         info.text = formatInfo(habit)
         typeImage.apply {
-            setImageResource(getTypeImageResource(habit.type))
+            setImageResource(
+                getTypeImageResource(
+                    habit.type
+                )
+            )
             setColorFilter(habit.color, PorterDuff.Mode.SRC_IN)
         }
         itemView.setOnClickListener { clickListener.onClick(habit) }
     }
 
     private fun formatInfo(habit: Habit) = with(itemView.resources) {
-        val priority = getString(getPriorityLabelResource(habit.priority))
+        val priority = getString(
+            getPriorityLabelResource(
+                habit.priority
+            )
+        )
         getString(R.string.habit_info_format, priority, habit.quantity, habit.periodicity)
     }
 }

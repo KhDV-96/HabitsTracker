@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/habitListFragment">
+    <fragment
+        android:id="@+id/habitListFragment"
+        android:name="com.khdv.habitstracker.screens.list.HabitListFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_habit_list">
+        <action
+            android:id="@+id/action_habitListFragment_to_editHabitFragment"
+            app:destination="@id/editHabitFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editHabitFragment"
+        android:name="com.khdv.habitstracker.screens.edit.EditHabitFragment"
+        android:label="@string/setup_habit_label"
+        tools:layout="@layout/fragment_edit_habit">
+        <argument
+            android:name="habit_index"
+            android:defaultValue="-1"
+            app:argType="integer" />
+    </fragment>
+</navigation>

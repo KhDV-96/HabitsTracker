@@ -1,4 +1,4 @@
-package com.khdv.habitstracker.adapter
+package com.khdv.habitstracker.screens.list
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +10,10 @@ class HabitsAdapter(
 ) : RecyclerView.Adapter<HabitViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
-        return HabitViewHolder.create(parent, clickListener)
+        return HabitViewHolder.create(
+            parent,
+            clickListener
+        )
     }
 
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {

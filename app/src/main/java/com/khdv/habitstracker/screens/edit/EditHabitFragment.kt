@@ -1,19 +1,21 @@
-package com.khdv.habitstracker
+package com.khdv.habitstracker.screens.edit
 
-import android.app.Activity
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.khdv.habitstracker.MainActivity
+import com.khdv.habitstracker.R
 import com.khdv.habitstracker.model.Habit
-import kotlinx.android.synthetic.main.activity_edit_habit.*
+import kotlinx.android.synthetic.main.fragment_edit_habit.*
 
-class EditHabitActivity : AppCompatActivity() {
+class EditHabitFragment : Fragment() {
 
     companion object {
-        const val HABIT_KEY = "HABIT"
-
         private fun getHabitType(radioButtonId: Int) = when (radioButtonId) {
             R.id.useful -> Habit.Type.USEFUL
             R.id.harmful -> Habit.Type.HARMFUL
@@ -26,27 +28,37 @@ class EditHabitActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var habits: MutableList<Habit>
     private lateinit var requiredTextFields: List<EditText>
+    private var habitIndex: Int = -1
     private var color: Int? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_habit)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        habits = (activity as MainActivity).habits
+        return inflater.inflate(R.layout.fragment_edit_habit, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        readArguments()
 
         requiredTextFields = listOf(title_view, quantity, periodicity)
 
         priority.setSelection(Habit.Priority.HIGH.ordinal)
+        save_button.setOnClickListener { saveHabit() }
+    }
 
-        intent.getParcelableExtra<Habit>(HABIT_KEY)?.let(::fillFields)
-
-        save_button.setOnClickListener {
-            if (!verifyFields()) return@setOnClickListener
-            val data = Intent().apply {
-                putExtra(HABIT_KEY, createHabit())
-            }
-            setResult(Activity.RESULT_OK, data)
-            finish()
-        }
+    private fun readArguments() {
+        val args = EditHabitFragmentArgs.fromBundle(arguments!!)
+        habitIndex = args.habitIndex
+        if (habitIndex > -1)
+            fillFields(habits[habitIndex])
+        else
+            habitIndex = habits.size
     }
 
     private fun fillFields(habit: Habit) {
@@ -60,6 +72,16 @@ class EditHabitActivity : AppCompatActivity() {
         quantity.setText(habit.quantity.toString())
         periodicity.setText(habit.periodicity.toString())
         color = habit.color
+    }
+
+    private fun saveHabit() {
+        if (verifyFields()) {
+            if (habitIndex == habits.size)
+                habits.add(createHabit())
+            else
+                habits[habitIndex] = createHabit()
+            findNavController().navigateUp()
+        }
     }
 
     private fun verifyFields(): Boolean {
