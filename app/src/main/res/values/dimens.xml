@@ -5,4 +5,5 @@
     <dimen name="content_spacing">16dp</dimen>
     <dimen name="layout_padding">16dp</dimen>
     <dimen name="label_start_spacing">16dp</dimen>
+    <dimen name="title_top_spacing">32dp</dimen>
 </resources>

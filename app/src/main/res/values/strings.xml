@@ -18,4 +18,9 @@
     <string name="periodicity_sentence_end">days</string>
     <string name="required_error">Required</string>
     <string name="setup_habit_label">Set up habit</string>
+    <string name="app_about"><b>Habits Tracker</b> is an application that helps you get a useful or harmful habit.
+    Set up a habit and follow it responsibility to achieve amazing results!
+    Choose priority and color to concentrate on what matters to you.</string>
+    <string name="about_label">About</string>
+    <string name="home_label">Home</string>
 </resources>

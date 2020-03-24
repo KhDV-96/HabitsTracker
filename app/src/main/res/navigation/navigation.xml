@@ -23,4 +23,9 @@
             android:defaultValue="-1"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.khdv.habitstracker.screens.about.AboutFragment"
+        android:label="@string/about_label"
+        tools:layout="@layout/fragment_about" />
 </navigation>
