@@ -16,7 +16,7 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/navigation"
         tools:ignore="FragmentTagUsage"
-        tools:layout="@layout/fragment_habit_list" />
+        tools:layout="@layout/fragment_home" />
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
