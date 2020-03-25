@@ -16,6 +16,8 @@ import kotlinx.android.synthetic.main.fragment_edit_habit.*
 class EditHabitFragment : Fragment() {
 
     companion object {
+        private const val CREATE_HABIT_INDEX = -1
+
         private fun getHabitType(radioButtonId: Int) = when (radioButtonId) {
             R.id.useful -> Habit.Type.USEFUL
             R.id.harmful -> Habit.Type.HARMFUL
@@ -34,8 +36,7 @@ class EditHabitFragment : Fragment() {
     private var color: Int? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         habits = (activity as MainActivity).habits
         return inflater.inflate(R.layout.fragment_edit_habit, container, false)
@@ -44,21 +45,20 @@ class EditHabitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        readArguments()
-
         requiredTextFields = listOf(title_view, quantity, periodicity)
 
-        priority.setSelection(Habit.Priority.HIGH.ordinal)
+        readArguments()
+        when (habitIndex) {
+            CREATE_HABIT_INDEX -> setDefaults()
+            else -> fillFields(habits[habitIndex])
+        }
+
         save_button.setOnClickListener { saveHabit() }
     }
 
     private fun readArguments() {
         val args = EditHabitFragmentArgs.fromBundle(arguments!!)
         habitIndex = args.habitIndex
-        if (habitIndex > -1)
-            fillFields(habits[habitIndex])
-        else
-            habitIndex = habits.size
     }
 
     private fun fillFields(habit: Habit) {
@@ -74,12 +74,17 @@ class EditHabitFragment : Fragment() {
         color = habit.color
     }
 
+    private fun setDefaults() {
+        type.check(R.id.useful)
+        priority.setSelection(Habit.Priority.HIGH.ordinal)
+    }
+
     private fun saveHabit() {
         if (verifyFields()) {
-            if (habitIndex == habits.size)
-                habits.add(createHabit())
-            else
-                habits[habitIndex] = createHabit()
+            when (habitIndex) {
+                CREATE_HABIT_INDEX -> habits.add(createHabit())
+                else -> habits[habitIndex] = createHabit()
+            }
             findNavController().navigateUp()
         }
     }

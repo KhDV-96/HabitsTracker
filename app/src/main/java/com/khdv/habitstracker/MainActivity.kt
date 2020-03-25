@@ -15,17 +15,19 @@ class MainActivity : AppCompatActivity() {
         private const val HABIT_LIST_KEY = "HABIT_LIST"
     }
 
-    lateinit var habits: ArrayList<Habit>
+    private lateinit var _habits: ArrayList<Habit>
+    val habits: MutableList<Habit>
+        get() = _habits
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        _habits = savedInstanceState?.getParcelableArrayList(HABIT_LIST_KEY) ?: ArrayList()
+
         val navController = findNavController(R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
         NavigationUI.setupWithNavController(nav_view, navController)
-
-        habits = savedInstanceState?.getParcelableArrayList(HABIT_LIST_KEY) ?: ArrayList()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -40,6 +42,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(HABIT_LIST_KEY, habits)
+        outState.putParcelableArrayList(HABIT_LIST_KEY, _habits)
     }
 }
