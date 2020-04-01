@@ -1,185 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context=".screens.edit.EditHabitFragment">
 
-    <LinearLayout
+    <data>
+
+        <import type="com.khdv.habitstracker.model.Habit" />
+
+        <import type="com.khdv.habitstracker.screens.edit.PriorityConverter" />
+
+        <variable
+            name="viewModel"
+            type="com.khdv.habitstracker.screens.edit.EditHabitViewModel" />
+    </data>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/layout_padding">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/title_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/label_start_spacing"
-            android:labelFor="@id/title_view"
-            android:text="@string/title_label" />
-
-        <EditText
-            android:id="@+id/title_view"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:importantForAutofill="no"
-            android:inputType="text" />
-
-        <TextView
-            android:id="@+id/description_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/label_start_spacing"
-            android:layout_marginTop="@dimen/content_spacing"
-            android:labelFor="@id/description"
-            android:text="@string/description_label" />
-
-        <EditText
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:gravity="start|top"
-            android:importantForAutofill="no"
-            android:inputType="textMultiLine" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/content_spacing">
+            android:orientation="vertical"
+            android:padding="@dimen/layout_padding">
 
             <TextView
-                android:id="@+id/habit_type_label"
+                android:id="@+id/title_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/label_start_spacing"
-                android:text="@string/habit_type_label"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:labelFor="@id/title"
+                android:text="@string/title_label" />
 
-            <RadioGroup
-                android:id="@+id/type"
-                android:layout_width="0dp"
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="@+id/habit_type_label"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/habit_type_label">
-
-                <RadioButton
-                    android:id="@+id/useful"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/useful_label" />
-
-                <RadioButton
-                    android:id="@+id/harmful"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/harmful_label" />
-
-            </RadioGroup>
+                android:ems="10"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:text="@={viewModel.title}"/>
 
             <TextView
-                android:id="@+id/priorities_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/label_start_spacing"
-                android:text="@string/priority_label"
-                app:layout_constraintStart_toStartOf="@+id/priority"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Spinner
-                android:id="@+id/priority"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/priorities"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/priorities_label" />
-
-            <TextView
-                android:id="@+id/periodicity_title"
+                android:id="@+id/description_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/label_start_spacing"
                 android:layout_marginTop="@dimen/content_spacing"
-                android:text="@string/periodicity_label"
-                app:layout_constraintStart_toStartOf="@+id/quantity_label"
-                app:layout_constraintTop_toBottomOf="@+id/type" />
+                android:labelFor="@id/description"
+                android:text="@string/description_label" />
 
-            <TextView
-                android:id="@+id/quantity_label"
+            <EditText
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="start|top"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:text="@={viewModel.description}" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/content_spacing">
+
+                <TextView
+                    android:id="@+id/habit_type_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/label_start_spacing"
+                    android:text="@string/habit_type_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RadioGroup
+                    android:id="@+id/type"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@+id/habit_type_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/habit_type_label">
+
+                    <RadioButton
+                        android:id="@+id/useful"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="@{viewModel.type.equals(Habit.Type.USEFUL)}"
+                        android:onClick="@{() -> viewModel.setType(Habit.Type.USEFUL)}"
+                        android:text="@string/useful_label" />
+
+                    <RadioButton
+                        android:id="@+id/harmful"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="@{viewModel.type.equals(Habit.Type.HARMFUL)}"
+                        android:onClick="@{() -> viewModel.setType(Habit.Type.HARMFUL)}"
+                        android:text="@string/harmful_label" />
+
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/priorities_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/label_start_spacing"
+                    android:text="@string/priority_label"
+                    app:layout_constraintStart_toStartOf="@+id/priority"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!--suppress AndroidUnknownAttribute -->
+                <Spinner
+                    android:id="@+id/priority"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/priorities"
+                    android:selectedItemPosition="@={PriorityConverter.toInt(viewModel.priority)}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/priorities_label" />
+
+                <TextView
+                    android:id="@+id/periodicity_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/label_start_spacing"
+                    android:layout_marginTop="@dimen/content_spacing"
+                    android:text="@string/periodicity_label"
+                    app:layout_constraintStart_toStartOf="@+id/quantity_label"
+                    app:layout_constraintTop_toBottomOf="@+id/type" />
+
+                <TextView
+                    android:id="@+id/quantity_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:labelFor="@id/quantity"
+                    android:text="@string/periodicity_sentence_start"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/periodicity_title" />
+
+                <EditText
+                    android:id="@+id/quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/quantity_label"
+                    android:ems="2"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:text="@={viewModel.quantity}"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/quantity_label"
+                    app:layout_constraintStart_toEndOf="@+id/quantity_label" />
+
+                <TextView
+                    android:id="@+id/periodicity_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/periodicity"
+                    android:text="@string/periodicity_sentence_middle"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/quantity"
+                    app:layout_constraintStart_toEndOf="@+id/quantity" />
+
+                <EditText
+                    android:id="@+id/periodicity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/periodicity_label"
+                    android:ems="2"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:text="@={viewModel.periodicity}"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/periodicity_label"
+                    app:layout_constraintStart_toEndOf="@+id/periodicity_label" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/periodicity_sentence_end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/periodicity"
+                    app:layout_constraintStart_toEndOf="@+id/periodicity" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/save_button"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:labelFor="@id/quantity"
-                android:text="@string/periodicity_sentence_start"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/content_spacing"
+                android:text="@string/save_label"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/periodicity_title" />
+                app:layout_constraintTop_toBottomOf="@+id/quantity" />
 
-            <EditText
-                android:id="@+id/quantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/quantity_label"
-                android:ems="2"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:maxLength="3"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                app:layout_constraintBaseline_toBaselineOf="@+id/quantity_label"
-                app:layout_constraintStart_toEndOf="@+id/quantity_label" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/periodicity_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:labelFor="@id/periodicity"
-                android:text="@string/periodicity_sentence_middle"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                app:layout_constraintBaseline_toBaselineOf="@+id/quantity"
-                app:layout_constraintStart_toEndOf="@+id/quantity" />
+    </ScrollView>
 
-            <EditText
-                android:id="@+id/periodicity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/periodicity_label"
-                android:ems="2"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:maxLength="3"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                app:layout_constraintBaseline_toBaselineOf="@+id/periodicity_label"
-                app:layout_constraintStart_toEndOf="@+id/periodicity_label" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/periodicity_sentence_end"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                app:layout_constraintBaseline_toBaselineOf="@+id/periodicity"
-                app:layout_constraintStart_toEndOf="@+id/periodicity" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Button
-            android:id="@+id/save_button"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/content_spacing"
-            android:text="@string/save_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/quantity" />
-
-    </LinearLayout>
-
-</ScrollView>
+</layout>

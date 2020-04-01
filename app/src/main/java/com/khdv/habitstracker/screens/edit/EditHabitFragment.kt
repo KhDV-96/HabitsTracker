@@ -1,6 +1,5 @@
 package com.khdv.habitstracker.screens.edit
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,24 +11,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.khdv.habitstracker.R
 import com.khdv.habitstracker.data.HabitsRepository
-import com.khdv.habitstracker.model.Habit
-import kotlinx.android.synthetic.main.fragment_edit_habit.*
+import com.khdv.habitstracker.databinding.FragmentEditHabitBinding
 
 class EditHabitFragment : Fragment() {
 
     companion object {
         private const val CREATE_HABIT_ID = -1
-
-        private fun getHabitType(radioButtonId: Int) = when (radioButtonId) {
-            R.id.useful -> Habit.Type.USEFUL
-            R.id.harmful -> Habit.Type.HARMFUL
-            else -> throw IllegalStateException("Unknown habit type button")
-        }
-
-        private fun randomColor(): Int {
-            val range = 0..255
-            return Color.argb(255, range.random(), range.random(), range.random())
-        }
     }
 
     private val viewModel: EditHabitViewModel by viewModels {
@@ -42,44 +29,29 @@ class EditHabitFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_edit_habit, container, false)
+        val binding = FragmentEditHabitBinding.inflate(inflater, container, false)
+
+        binding.viewModel = viewModel
+        binding.saveButton.setOnClickListener { saveHabit() }
+
+        requiredTextFields = listOf(binding.title, binding.quantity, binding.periodicity)
+
+        binding.lifecycleOwner = this
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.habit.observe(viewLifecycleOwner, Observer {
-            if (it == null) setDefaults() else fillFields(it)
-        })
         viewModel.returnToHomeScreen.observe(viewLifecycleOwner, Observer {
             it.executeIfNotHandled { findNavController().navigateUp() }
         })
-
-        requiredTextFields = listOf(title_view, quantity, periodicity)
-
-        save_button.setOnClickListener { saveHabit() }
-    }
-
-    private fun fillFields(habit: Habit) {
-        title_view.setText(habit.title)
-        description.setText(habit.description)
-        when (habit.type) {
-            Habit.Type.USEFUL -> useful.isChecked = true
-            Habit.Type.HARMFUL -> harmful.isChecked = true
-        }
-        priority.setSelection(habit.priority.ordinal)
-        quantity.setText(habit.quantity.toString())
-        periodicity.setText(habit.periodicity.toString())
-    }
-
-    private fun setDefaults() {
-        type.check(R.id.useful)
-        priority.setSelection(Habit.Priority.HIGH.ordinal)
     }
 
     private fun saveHabit() {
         if (verifyFields())
-            viewModel.saveHabit(createHabit())
+            viewModel.saveHabit()
     }
 
     private fun verifyFields(): Boolean {
@@ -89,15 +61,4 @@ class EditHabitFragment : Fragment() {
         }
         return true
     }
-
-    private fun createHabit() = Habit(
-        viewModel.habit.value?.id ?: CREATE_HABIT_ID,
-        title_view.text.toString(),
-        description.text.toString(),
-        Habit.Priority.valueOf(priority.selectedItemPosition),
-        getHabitType(type.checkedRadioButtonId),
-        quantity.text.toString().toInt(),
-        periodicity.text.toString().toInt(),
-        viewModel.habit.value?.color ?: randomColor()
-    )
 }
