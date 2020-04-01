@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.khdv.habitstracker.R
 import com.khdv.habitstracker.data.HabitsRepository
-import kotlinx.android.synthetic.main.fragment_home.*
+import com.khdv.habitstracker.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
@@ -29,7 +29,15 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        val binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+        binding.viewModel = viewModel
+        binding.pager.adapter = HabitListPagerAdapter(this)
+        TabLayoutMediator(binding.tabs, binding.pager) { tab, position ->
+            tab.text = tabLabels[position]
+        }.attach()
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,11 +46,6 @@ class HomeFragment : Fragment() {
         viewModel.navigateToHabitCreation.observe(viewLifecycleOwner, Observer {
             it.executeIfNotHandled(this::navigateToCreateHabit)
         })
-
-        pager.adapter = HabitListPagerAdapter(this)
-        TabLayoutMediator(tabs, pager) { tab, position -> tab.text = tabLabels[position] }.attach()
-
-        add_habit_button.setOnClickListener { viewModel.createHabit() }
     }
 
     private fun navigateToCreateHabit() {

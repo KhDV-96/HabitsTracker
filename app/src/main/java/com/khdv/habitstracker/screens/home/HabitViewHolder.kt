@@ -1,21 +1,21 @@
 package com.khdv.habitstracker.screens.home
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.khdv.habitstracker.R
+import com.khdv.habitstracker.databinding.ItemHabitBinding
 import com.khdv.habitstracker.model.Habit
 
-class HabitViewHolder(view: View, private val clickListener: HabitClickListener) :
-    RecyclerView.ViewHolder(view) {
+class HabitViewHolder(private val binding: ItemHabitBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
     companion object {
         fun create(parent: ViewGroup, clickListener: HabitClickListener): HabitViewHolder {
             val inflater = LayoutInflater.from(parent.context)
-            val view = inflater.inflate(R.layout.item_habit, parent, false)
-            return HabitViewHolder(view, clickListener)
+            val binding = ItemHabitBinding.inflate(inflater, parent, false)
+            binding.clickListener = clickListener
+            return HabitViewHolder(binding)
         }
 
         private fun getPriorityLabelResource(priority: Habit.Priority) = when (priority) {
@@ -25,17 +25,10 @@ class HabitViewHolder(view: View, private val clickListener: HabitClickListener)
         }
     }
 
-    private val title = itemView.findViewById<TextView>(R.id.title_view)
-    private val description = itemView.findViewById<TextView>(R.id.description)
-    private val info = itemView.findViewById<TextView>(R.id.info)
-    private val color = itemView.findViewById<View>(R.id.color)
-
     fun bind(habit: Habit) {
-        title.text = habit.title
-        description.text = habit.description
-        info.text = formatInfo(habit)
-        color.setBackgroundColor(habit.color)
-        itemView.setOnClickListener { clickListener.onClick(habit) }
+        binding.habit = habit
+        binding.info.text = formatInfo(habit)
+        binding.executePendingBindings()
     }
 
     private fun formatInfo(habit: Habit) = with(itemView.resources) {
