@@ -4,10 +4,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.khdv.habitstracker.model.Habit
 
-class HabitsAdapter(
-    private val habits: List<Habit>,
-    private val clickListener: HabitClickListener
-) : RecyclerView.Adapter<HabitViewHolder>() {
+class HabitsAdapter(private val clickListener: HabitClickListener) :
+    RecyclerView.Adapter<HabitViewHolder>() {
+
+    private var habits = emptyList<Habit>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
         return HabitViewHolder.create(
@@ -21,6 +21,11 @@ class HabitsAdapter(
     }
 
     override fun getItemCount() = habits.size
+
+    fun submitList(habits: List<Habit>) {
+        this.habits = habits
+        notifyDataSetChanged()
+    }
 }
 
 class HabitClickListener(private val callback: (Habit) -> Unit) {

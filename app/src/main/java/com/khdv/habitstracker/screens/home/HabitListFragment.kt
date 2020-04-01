@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.khdv.habitstracker.MainActivity
 import com.khdv.habitstracker.R
+import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.model.Habit
 import kotlinx.android.synthetic.main.fragment_habit_list.*
 
@@ -24,33 +26,36 @@ class HabitListFragment : Fragment() {
         }
     }
 
-    private lateinit var habits: List<Habit>
-    private lateinit var filteredHabits: List<Habit>
+    private val viewModel: HabitsViewModel by activityViewModels {
+        HabitsViewModelFactory(HabitsRepository())
+    }
     private lateinit var adapter: HabitsAdapter
-    private lateinit var habitType: Habit.Type
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        habits = (activity as MainActivity).habits
-        habitType = Habit.Type.valueOf(arguments!!.getString(HABIT_TYPE_ARGUMENT)!!)
-        filteredHabits = habits.filter { it.type == habitType }
-        adapter = HabitsAdapter(filteredHabits, HabitClickListener(::navigateToEditHabit))
-
         return inflater.inflate(R.layout.fragment_habit_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val type = Habit.Type.valueOf(arguments!!.getString(HABIT_TYPE_ARGUMENT)!!)
+
+        adapter = HabitsAdapter(HabitClickListener(viewModel::editHabit))
+
+        viewModel.getHabitsWithType(type).observe(viewLifecycleOwner, Observer(adapter::submitList))
+        viewModel.navigateToHabitEditing.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let(this::navigateToEditHabit)
+        })
+
         habit_list.adapter = adapter
         val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         habit_list.addItemDecoration(decoration)
     }
 
-    private fun navigateToEditHabit(habit: Habit) {
-        val index = habits.indexOf(habit)
-        val action = HomeFragmentDirections.actionHabitListFragmentToEditHabitFragment(index)
+    private fun navigateToEditHabit(habitId: Int) {
+        val action = HomeFragmentDirections.actionHabitListFragmentToEditHabitFragment(habitId)
         findNavController().navigate(action)
     }
 }

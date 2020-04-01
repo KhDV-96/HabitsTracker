@@ -1,10 +1,7 @@
 package com.khdv.habitstracker.model
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-
-@Parcelize
 data class Habit(
+    val id: Int,
     val title: String,
     val description: String,
     val priority: Priority,
@@ -12,7 +9,7 @@ data class Habit(
     val quantity: Int,
     val periodicity: Int,
     val color: Int
-) : Parcelable {
+) {
     enum class Priority {
         LOW, MEDIUM, HIGH;
 

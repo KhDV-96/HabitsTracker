@@ -19,7 +19,7 @@
         android:label="@string/setup_habit_label"
         tools:layout="@layout/fragment_edit_habit">
         <argument
-            android:name="habit_index"
+            android:name="habit_id"
             android:defaultValue="-1"
             app:argType="integer" />
     </fragment>

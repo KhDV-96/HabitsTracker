@@ -6,24 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
-import com.khdv.habitstracker.model.Habit
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        private const val HABIT_LIST_KEY = "HABIT_LIST"
-    }
-
-    private lateinit var _habits: ArrayList<Habit>
-    val habits: MutableList<Habit>
-        get() = _habits
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        _habits = savedInstanceState?.getParcelableArrayList(HABIT_LIST_KEY) ?: ArrayList()
 
         val navController = findNavController(R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
@@ -38,10 +27,5 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(HABIT_LIST_KEY, _habits)
     }
 }

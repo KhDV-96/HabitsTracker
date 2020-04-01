@@ -7,16 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.khdv.habitstracker.MainActivity
 import com.khdv.habitstracker.R
+import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.model.Habit
 import kotlinx.android.synthetic.main.fragment_edit_habit.*
 
 class EditHabitFragment : Fragment() {
 
     companion object {
-        private const val CREATE_HABIT_INDEX = -1
+        private const val CREATE_HABIT_ID = -1
 
         private fun getHabitType(radioButtonId: Int) = when (radioButtonId) {
             R.id.useful -> Habit.Type.USEFUL
@@ -25,40 +27,37 @@ class EditHabitFragment : Fragment() {
         }
 
         private fun randomColor(): Int {
-            val range = (0..255)
+            val range = 0..255
             return Color.argb(255, range.random(), range.random(), range.random())
         }
     }
 
-    private lateinit var habits: MutableList<Habit>
+    private val viewModel: EditHabitViewModel by viewModels {
+        val args = EditHabitFragmentArgs.fromBundle(arguments!!)
+        val habitIndex = if (args.habitId == CREATE_HABIT_ID) null else args.habitId
+        EditHabitViewModelFactory(HabitsRepository(), habitIndex)
+    }
     private lateinit var requiredTextFields: List<EditText>
-    private var habitIndex: Int = -1
-    private var color: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        habits = (activity as MainActivity).habits
         return inflater.inflate(R.layout.fragment_edit_habit, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.habit.observe(viewLifecycleOwner, Observer {
+            if (it == null) setDefaults() else fillFields(it)
+        })
+        viewModel.returnToHomeScreen.observe(viewLifecycleOwner, Observer {
+            it.executeIfNotHandled { findNavController().navigateUp() }
+        })
+
         requiredTextFields = listOf(title_view, quantity, periodicity)
 
-        readArguments()
-        when (habitIndex) {
-            CREATE_HABIT_INDEX -> setDefaults()
-            else -> fillFields(habits[habitIndex])
-        }
-
         save_button.setOnClickListener { saveHabit() }
-    }
-
-    private fun readArguments() {
-        val args = EditHabitFragmentArgs.fromBundle(arguments!!)
-        habitIndex = args.habitIndex
     }
 
     private fun fillFields(habit: Habit) {
@@ -71,7 +70,6 @@ class EditHabitFragment : Fragment() {
         priority.setSelection(habit.priority.ordinal)
         quantity.setText(habit.quantity.toString())
         periodicity.setText(habit.periodicity.toString())
-        color = habit.color
     }
 
     private fun setDefaults() {
@@ -80,13 +78,8 @@ class EditHabitFragment : Fragment() {
     }
 
     private fun saveHabit() {
-        if (verifyFields()) {
-            when (habitIndex) {
-                CREATE_HABIT_INDEX -> habits.add(createHabit())
-                else -> habits[habitIndex] = createHabit()
-            }
-            findNavController().navigateUp()
-        }
+        if (verifyFields())
+            viewModel.saveHabit(createHabit())
     }
 
     private fun verifyFields(): Boolean {
@@ -98,12 +91,13 @@ class EditHabitFragment : Fragment() {
     }
 
     private fun createHabit() = Habit(
+        viewModel.habit.value?.id ?: CREATE_HABIT_ID,
         title_view.text.toString(),
         description.text.toString(),
         Habit.Priority.valueOf(priority.selectedItemPosition),
         getHabitType(type.checkedRadioButtonId),
         quantity.text.toString().toInt(),
         periodicity.text.toString().toInt(),
-        color ?: randomColor()
+        viewModel.habit.value?.color ?: randomColor()
     )
 }
