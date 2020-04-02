@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="fab_spacing">16dp</dimen>
-    <dimen name="type_icon_size">40dp</dimen>
     <dimen name="content_spacing">16dp</dimen>
     <dimen name="layout_padding">16dp</dimen>
     <dimen name="label_start_spacing">16dp</dimen>

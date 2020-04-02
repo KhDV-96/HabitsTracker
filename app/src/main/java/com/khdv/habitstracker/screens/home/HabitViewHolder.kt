@@ -33,6 +33,10 @@ class HabitViewHolder(private val binding: ItemHabitBinding) :
 
     private fun formatInfo(habit: Habit) = with(itemView.resources) {
         val priority = getString(getPriorityLabelResource(habit.priority))
-        getString(R.string.habit_info_format, priority, habit.quantity, habit.periodicity)
+        val times = getQuantityString(R.plurals.time_label, habit.quantity)
+        val days = getQuantityString(R.plurals.day_label, habit.periodicity)
+        getString(
+            R.string.habit_info_format, priority, habit.quantity, times, habit.periodicity, days
+        )
     }
 }

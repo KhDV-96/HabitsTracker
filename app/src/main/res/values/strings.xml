@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Habits Tracker</string>
     <string name="habit_type_label">Type of the habit</string>
-    <string name="habit_info_format">%s • %d times in %d days</string>
+    <string name="habit_info_format">%s • %d %s in %d %s</string>
     <string name="low_label">low</string>
     <string name="medium_label">medium</string>
     <string name="high_label">high</string>
@@ -28,4 +28,13 @@
     <string name="sort_by_habit_priority_label">Sort by priority</string>
     <string name="sort_priority_ascending_label">Sort habits in ascending order of priority</string>
     <string name="sort_priority_descending_label">Sort habits in descending order of priority</string>
+
+    <plurals name="time_label">
+        <item quantity="one">time</item>
+        <item quantity="other">times</item>
+    </plurals>
+    <plurals name="day_label">
+        <item quantity="one">day</item>
+        <item quantity="other">days</item>
+    </plurals>
 </resources>
