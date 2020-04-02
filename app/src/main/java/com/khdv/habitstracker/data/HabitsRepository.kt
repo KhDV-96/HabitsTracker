@@ -8,7 +8,12 @@ class HabitsRepository {
         private val habits = mutableListOf<Habit>()
     }
 
-    fun getAllHabits(): List<Habit> = habits
+    fun find(title: String = "", priorityOrder: Order = Order.ARBITRARY) = habits.asSequence()
+        .filter { it.title.contains(title, true) }
+        .sortedWith(Comparator { h1, h2 ->
+            priorityOrder.value * h1.priority.compareTo(h2.priority)
+        })
+        .toList()
 
     fun findById(id: Int) = habits.getOrNull(id)
 

@@ -23,4 +23,9 @@
     Choose priority and color to concentrate on what matters to you.</string>
     <string name="about_label">About</string>
     <string name="home_label">Home</string>
+    <string name="filters_and_sorts_label">Filters and Sorts</string>
+    <string name="title_search_label">Search by title</string>
+    <string name="sort_by_habit_priority_label">Sort by priority</string>
+    <string name="sort_priority_ascending_label">Sort habits in ascending order of priority</string>
+    <string name="sort_priority_descending_label">Sort habits in descending order of priority</string>
 </resources>

@@ -43,6 +43,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.loadHabits() // ToDo: delete after Room deploying
         viewModel.navigateToHabitCreation.observe(viewLifecycleOwner, Observer {
             it.executeIfNotHandled(this::navigateToCreateHabit)
         })
