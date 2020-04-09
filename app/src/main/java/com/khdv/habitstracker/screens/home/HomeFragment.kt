@@ -13,11 +13,13 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.khdv.habitstracker.R
 import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentHomeBinding
+import com.khdv.habitstracker.db.HabitsTrackerDatabase
 
 class HomeFragment : Fragment() {
 
     private val viewModel: HabitsViewModel by activityViewModels {
-        HabitsViewModelFactory(HabitsRepository())
+        val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
+        HabitsViewModelFactory(HabitsRepository(dao))
     }
     private lateinit var tabLabels: Array<String>
 
@@ -43,7 +45,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.loadHabits() // ToDo: delete after Room deploying
         viewModel.navigateToHabitCreation.observe(viewLifecycleOwner, Observer {
             it.executeIfNotHandled(this::navigateToCreateHabit)
         })

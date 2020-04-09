@@ -1,7 +1,7 @@
 package com.khdv.habitstracker.model
 
 data class Habit(
-    val id: Int,
+    val id: Int = 0,
     val title: String,
     val description: String,
     val priority: Priority,
@@ -11,11 +11,7 @@ data class Habit(
     val color: Int
 ) {
     enum class Priority {
-        LOW, MEDIUM, HIGH;
-
-        companion object {
-            fun valueOf(ordinal: Int) = values().first { it.ordinal == ordinal }
-        }
+        LOW, MEDIUM, HIGH
     }
 
     enum class Type {

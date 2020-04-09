@@ -31,7 +31,7 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
         get() = _returnToHomeScreen
 
     init {
-        habitId?.run(repository::findById)?.apply(this::fillProperties)
+        habitId?.run(repository::getById)?.apply(this::fillProperties)
     }
 
     fun setType(value: Habit.Type) {
@@ -58,7 +58,7 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
     }
 
     private fun createHabit() = Habit(
-        habitId ?: -1,
+        habitId ?: 0,
         title.value!!,
         description.value!!,
         priority.value!!,

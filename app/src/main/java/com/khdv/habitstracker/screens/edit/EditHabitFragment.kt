@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.khdv.habitstracker.R
 import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentEditHabitBinding
+import com.khdv.habitstracker.db.HabitsTrackerDatabase
 
 class EditHabitFragment : Fragment() {
 
@@ -20,9 +21,10 @@ class EditHabitFragment : Fragment() {
     }
 
     private val viewModel: EditHabitViewModel by viewModels {
+        val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
         val args = EditHabitFragmentArgs.fromBundle(arguments!!)
         val habitIndex = if (args.habitId == CREATE_HABIT_ID) null else args.habitId
-        EditHabitViewModelFactory(HabitsRepository(), habitIndex)
+        EditHabitViewModelFactory(HabitsRepository(dao), habitIndex)
     }
     private lateinit var requiredTextFields: List<EditText>
 

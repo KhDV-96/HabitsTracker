@@ -6,7 +6,7 @@
 
     <data>
 
-        <import type="com.khdv.habitstracker.data.Order" />
+        <import type="com.khdv.habitstracker.util.Order" />
 
         <variable
             name="viewModel"

@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentHabitListBinding
+import com.khdv.habitstracker.db.HabitsTrackerDatabase
 import com.khdv.habitstracker.model.Habit
 
 class HabitListFragment : Fragment() {
@@ -27,7 +28,8 @@ class HabitListFragment : Fragment() {
     }
 
     private val viewModel: HabitsViewModel by activityViewModels {
-        HabitsViewModelFactory(HabitsRepository())
+        val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
+        HabitsViewModelFactory(HabitsRepository(dao))
     }
     private lateinit var listDecoration: DividerItemDecoration
     private lateinit var adapter: HabitsAdapter

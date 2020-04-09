@@ -1,27 +1,17 @@
 package com.khdv.habitstracker.data
 
+import androidx.lifecycle.map
+import com.khdv.habitstracker.db.HabitDao
+import com.khdv.habitstracker.db.HabitEntity
 import com.khdv.habitstracker.model.Habit
 
-class HabitsRepository {
+class HabitsRepository(private val habitDao: HabitDao) {
 
-    companion object {
-        private val habits = mutableListOf<Habit>()
-    }
+    fun getAll() = habitDao.getAll().map { it.map(HabitEntity::toModel) }
 
-    fun find(title: String = "", priorityOrder: Order = Order.ARBITRARY) = habits.asSequence()
-        .filter { it.title.contains(title, true) }
-        .sortedWith(Comparator { h1, h2 ->
-            priorityOrder.value * h1.priority.compareTo(h2.priority)
-        })
-        .toList()
+    fun getById(id: Int) = habitDao.getById(id).toModel()
 
-    fun findById(id: Int) = habits.getOrNull(id)
+    fun insert(habit: Habit) = habitDao.insert(habit.toEntity())
 
-    fun insert(habit: Habit) {
-        habits.add(habit.copy(id = habits.size))
-    }
-
-    fun update(habit: Habit) {
-        habits[habit.id] = habit
-    }
+    fun update(habit: Habit) = habitDao.update(habit.toEntity())
 }
