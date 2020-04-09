@@ -15,6 +15,7 @@ import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentHabitListBinding
 import com.khdv.habitstracker.db.HabitsTrackerDatabase
 import com.khdv.habitstracker.model.Habit
+import com.khdv.habitstracker.util.ContentEventObserver
 
 class HabitListFragment : Fragment() {
 
@@ -60,8 +61,8 @@ class HabitListFragment : Fragment() {
         val type = Habit.Type.valueOf(arguments!!.getString(HABIT_TYPE_ARGUMENT)!!)
 
         viewModel.getHabitsWithType(type).observe(viewLifecycleOwner, Observer(adapter::submitList))
-        viewModel.navigateToHabitEditing.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let(this::navigateToEditHabit)
+        viewModel.navigateToHabitEditing.observe(viewLifecycleOwner, ContentEventObserver {
+            navigateToEditHabit(it)
         })
     }
 
