@@ -22,6 +22,6 @@ abstract class HabitsTrackerDatabase : RoomDatabase() {
             context.applicationContext,
             HabitsTrackerDatabase::class.java,
             "habits_tracker.db"
-        ).allowMainThreadQueries().build() // ToDo: disallow main thread queries
+        ).build()
     }
 }

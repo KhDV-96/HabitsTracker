@@ -9,9 +9,9 @@ class HabitsRepository(private val habitDao: HabitDao) {
 
     fun getAll() = habitDao.getAll().map { it.map(HabitEntity::toModel) }
 
-    fun getById(id: Int) = habitDao.getById(id).toModel()
+    suspend fun getById(id: Int) = habitDao.getById(id).toModel()
 
-    fun insert(habit: Habit) = habitDao.insert(habit.toEntity())
+    suspend fun insert(habit: Habit) = habitDao.insert(habit.toEntity())
 
-    fun update(habit: Habit) = habitDao.update(habit.toEntity())
+    suspend fun update(habit: Habit) = habitDao.update(habit.toEntity())
 }

@@ -4,9 +4,13 @@ import android.graphics.Color
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.model.Habit
 import com.khdv.habitstracker.util.ActionEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class EditHabitViewModel(private val repository: HabitsRepository, private val habitId: Int?) :
     ViewModel() {
@@ -31,7 +35,7 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
         get() = _returnToHomeScreen
 
     init {
-        habitId?.run(repository::getById)?.apply(this::fillProperties)
+        habitId?.run(this::loadHabit)
     }
 
     fun setType(value: Habit.Type) {
@@ -40,11 +44,20 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
 
     fun saveHabit() {
         val habit = createHabit()
-        when (habitId) {
-            null -> repository.insert(habit)
-            else -> repository.update(habit)
+        viewModelScope.launch(Dispatchers.IO) {
+            when (habitId) {
+                null -> repository.insert(habit)
+                else -> repository.update(habit)
+            }
+            _returnToHomeScreen.postValue(ActionEvent())
         }
-        _returnToHomeScreen.value = ActionEvent()
+    }
+
+    private fun loadHabit(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val habit = repository.getById(id)
+        withContext(Dispatchers.Main) {
+            fillProperties(habit)
+        }
     }
 
     private fun fillProperties(habit: Habit) {

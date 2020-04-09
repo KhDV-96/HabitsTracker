@@ -13,11 +13,11 @@ interface HabitDao {
     fun getAll(): LiveData<List<HabitEntity>>
 
     @Query("SELECT * FROM habits WHERE id = :id")
-    fun getById(id: Int): HabitEntity
+    suspend fun getById(id: Int): HabitEntity
 
     @Insert
-    fun insert(habit: HabitEntity)
+    suspend fun insert(habit: HabitEntity)
 
     @Update
-    fun update(habit: HabitEntity)
+    suspend fun update(habit: HabitEntity)
 }
