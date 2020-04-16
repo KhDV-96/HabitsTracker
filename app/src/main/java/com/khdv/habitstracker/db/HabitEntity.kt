@@ -6,12 +6,14 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.khdv.habitstracker.model.Habit
 import com.khdv.habitstracker.util.toEnum
+import java.util.*
 
 @Entity(tableName = "habits")
 data class HabitEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey val id: String,
     val title: String,
     val description: String,
+    @field:TypeConverters(DateConverter::class) val date: Date,
     @field:TypeConverters(HabitPriorityConverter::class) val priority: Habit.Priority,
     @field:TypeConverters(HabitTypeConverter::class) val type: Habit.Type,
     val quantity: Int,
@@ -39,4 +41,15 @@ object HabitTypeConverter {
     @TypeConverter
     @JvmStatic
     fun typeFromInt(ordinal: Int) = ordinal.toEnum<Habit.Type>()
+}
+
+object DateConverter {
+
+    @TypeConverter
+    @JvmStatic
+    fun dateToTimestamp(date: Date) = date.time
+
+    @TypeConverter
+    @JvmStatic
+    fun timestampToDate(timestamp: Long) = Date(timestamp)
 }

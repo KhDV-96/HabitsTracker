@@ -20,8 +20,9 @@
         tools:layout="@layout/fragment_edit_habit">
         <argument
             android:name="habit_id"
-            android:defaultValue="-1"
-            app:argType="integer" />
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"

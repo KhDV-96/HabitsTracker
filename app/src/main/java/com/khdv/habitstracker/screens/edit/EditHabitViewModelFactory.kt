@@ -6,7 +6,7 @@ import com.khdv.habitstracker.data.HabitsRepository
 
 class EditHabitViewModelFactory(
     private val repository: HabitsRepository,
-    private val habitId: Int?
+    private val habitId: String?
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

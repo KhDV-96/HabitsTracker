@@ -9,12 +9,13 @@ import androidx.fragment.app.activityViewModels
 import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentHabitFiltersAndSortsBinding
 import com.khdv.habitstracker.db.HabitsTrackerDatabase
+import com.khdv.habitstracker.network.HabitsApi
 
 class HabitFiltersAndSortsFragment : Fragment() {
 
     private val viewModel: HabitsViewModel by activityViewModels {
         val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
-        HabitsViewModelFactory(HabitsRepository(dao))
+        HabitsViewModelFactory(HabitsRepository(dao, HabitsApi.service))
     }
 
     override fun onCreateView(

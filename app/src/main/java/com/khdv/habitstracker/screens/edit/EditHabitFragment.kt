@@ -12,19 +12,15 @@ import com.khdv.habitstracker.R
 import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentEditHabitBinding
 import com.khdv.habitstracker.db.HabitsTrackerDatabase
+import com.khdv.habitstracker.network.HabitsApi
 import com.khdv.habitstracker.util.ActionEventObserver
 
 class EditHabitFragment : Fragment() {
 
-    companion object {
-        private const val CREATE_HABIT_ID = -1
-    }
-
     private val viewModel: EditHabitViewModel by viewModels {
         val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
         val args = EditHabitFragmentArgs.fromBundle(arguments!!)
-        val habitIndex = if (args.habitId == CREATE_HABIT_ID) null else args.habitId
-        EditHabitViewModelFactory(HabitsRepository(dao), habitIndex)
+        EditHabitViewModelFactory(HabitsRepository(dao, HabitsApi.service), args.habitId)
     }
     private lateinit var requiredTextFields: List<EditText>
 

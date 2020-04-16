@@ -13,13 +13,14 @@ import com.khdv.habitstracker.R
 import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentHomeBinding
 import com.khdv.habitstracker.db.HabitsTrackerDatabase
+import com.khdv.habitstracker.network.HabitsApi
 import com.khdv.habitstracker.util.ActionEventObserver
 
 class HomeFragment : Fragment() {
 
     private val viewModel: HabitsViewModel by activityViewModels {
         val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
-        HabitsViewModelFactory(HabitsRepository(dao))
+        HabitsViewModelFactory(HabitsRepository(dao, HabitsApi.service))
     }
     private lateinit var tabLabels: Array<String>
 

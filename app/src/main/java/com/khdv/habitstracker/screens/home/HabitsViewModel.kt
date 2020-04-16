@@ -20,12 +20,12 @@ class HabitsViewModel(repository: HabitsRepository) : ViewModel() {
     val navigateToHabitCreation: LiveData<ActionEvent>
         get() = _navigateToHabitCreation
 
-    private val _navigateToHabitEditing = MutableLiveData<ContentEvent<Int>>()
-    val navigateToHabitEditing: LiveData<ContentEvent<Int>>
+    private val _navigateToHabitEditing = MutableLiveData<ContentEvent<String>>()
+    val navigateToHabitEditing: LiveData<ContentEvent<String>>
         get() = _navigateToHabitEditing
 
     init {
-        displayedHabits.addSource(habits) { updateDisplayedHabits(it) }
+        displayedHabits.addSource(habits, this::updateDisplayedHabits)
         displayedHabits.addSource(titleFilter) { habits.value?.let(this::updateDisplayedHabits) }
         displayedHabits.addSource(priorityOrder) { habits.value?.let(this::updateDisplayedHabits) }
     }

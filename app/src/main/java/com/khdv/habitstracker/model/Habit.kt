@@ -1,9 +1,12 @@
 package com.khdv.habitstracker.model
 
+import java.util.*
+
 data class Habit(
-    val id: Int = 0,
+    val id: String,
     val title: String,
     val description: String,
+    val date: Date,
     val priority: Priority,
     val type: Type,
     val quantity: Int,

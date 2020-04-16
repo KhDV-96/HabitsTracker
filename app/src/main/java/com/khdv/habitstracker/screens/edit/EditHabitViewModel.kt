@@ -9,8 +9,9 @@ import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.model.Habit
 import com.khdv.habitstracker.util.ActionEvent
 import kotlinx.coroutines.launch
+import java.util.*
 
-class EditHabitViewModel(private val repository: HabitsRepository, private val habitId: Int?) :
+class EditHabitViewModel(private val repository: HabitsRepository, private val habitId: String?) :
     ViewModel() {
 
     companion object {
@@ -51,7 +52,7 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
         }
     }
 
-    private fun loadHabit(id: Int) = viewModelScope.launch {
+    private fun loadHabit(id: String) = viewModelScope.launch {
         fillProperties(repository.getById(id))
     }
 
@@ -66,9 +67,10 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
     }
 
     private fun createHabit() = Habit(
-        habitId ?: 0,
+        habitId ?: "",
         title.value!!,
         description.value!!,
+        Date(),
         priority.value!!,
         type.value!!,
         quantity.value!!.toInt(),

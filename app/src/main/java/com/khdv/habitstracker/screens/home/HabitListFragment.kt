@@ -15,6 +15,7 @@ import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentHabitListBinding
 import com.khdv.habitstracker.db.HabitsTrackerDatabase
 import com.khdv.habitstracker.model.Habit
+import com.khdv.habitstracker.network.HabitsApi
 import com.khdv.habitstracker.util.ContentEventObserver
 
 class HabitListFragment : Fragment() {
@@ -30,7 +31,7 @@ class HabitListFragment : Fragment() {
 
     private val viewModel: HabitsViewModel by activityViewModels {
         val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
-        HabitsViewModelFactory(HabitsRepository(dao))
+        HabitsViewModelFactory(HabitsRepository(dao, HabitsApi.service))
     }
     private lateinit var listDecoration: DividerItemDecoration
     private lateinit var adapter: HabitsAdapter
@@ -66,7 +67,7 @@ class HabitListFragment : Fragment() {
         })
     }
 
-    private fun navigateToEditHabit(habitId: Int) {
+    private fun navigateToEditHabit(habitId: String) {
         val action = HomeFragmentDirections.actionHabitListFragmentToEditHabitFragment(habitId)
         findNavController().navigate(action)
     }
