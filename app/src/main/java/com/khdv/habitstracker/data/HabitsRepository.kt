@@ -7,6 +7,7 @@ import com.khdv.habitstracker.db.HabitDao
 import com.khdv.habitstracker.db.HabitEntity
 import com.khdv.habitstracker.model.Habit
 import com.khdv.habitstracker.network.HabitDto
+import com.khdv.habitstracker.network.HabitUidDto
 import com.khdv.habitstracker.network.HabitsService
 import com.khdv.habitstracker.network.error
 import com.khdv.habitstracker.util.Result
@@ -52,6 +53,15 @@ class HabitsRepository(private val habitDao: HabitDao, private val habitsService
         }.also {
             if (it is Result.Success)
                 habitDao.update(habit.toEntity())
+        }
+    }
+
+    suspend fun delete(habit: Habit) = withContext(Dispatchers.IO) {
+        makeSafetyApiCall {
+            habitsService.deleteHabit(HabitUidDto(habit.id))
+        }.also {
+            if (it is Result.Success)
+                habitDao.delete(habit.toEntity())
         }
     }
 

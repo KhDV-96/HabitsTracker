@@ -29,6 +29,7 @@
     <string name="sort_priority_ascending_label">Sort habits in ascending order of priority</string>
     <string name="sort_priority_descending_label">Sort habits in descending order of priority</string>
     <string name="connection_error_message">A network problem has occurred: check your internet connection</string>
+    <string name="delete_habit_label">Delete</string>
 
     <plurals name="time_label">
         <item quantity="one">time</item>

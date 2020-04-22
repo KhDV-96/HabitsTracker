@@ -23,6 +23,7 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
         }
     }
 
+    private lateinit var habit: Habit
     val title = MutableLiveData<String>()
     val description = MutableLiveData("")
     val priority = MutableLiveData(Habit.Priority.HIGH)
@@ -54,17 +55,18 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
                 null -> repository.insert(habit)
                 else -> repository.update(habit)
             }
-            when (result) {
-                is Result.Success -> _returnToHomeScreen.value =
-                    ActionEvent()
-                is Result.Error -> _error.value =
-                    ContentEvent(result.throwable)
-            }
+            handleResult(result)
         }
     }
 
+    fun deleteHabit() = viewModelScope.launch {
+        val result = repository.delete(habit)
+        handleResult(result)
+    }
+
     private fun loadHabit(id: String) = viewModelScope.launch {
-        fillProperties(repository.getById(id))
+        habit = repository.getById(id)
+        fillProperties(habit)
     }
 
     private fun fillProperties(habit: Habit) {
@@ -88,4 +90,9 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
         periodicity.value!!.toInt(),
         color.value ?: randomColor()
     )
+
+    private fun <T> handleResult(result: Result<T>) = when (result) {
+        is Result.Success -> _returnToHomeScreen.value = ActionEvent()
+        is Result.Error -> _error.value = ContentEvent(result.throwable)
+    }
 }

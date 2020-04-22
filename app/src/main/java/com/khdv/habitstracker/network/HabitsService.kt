@@ -6,8 +6,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.PUT
 
 private const val BASE_URL = "https://droid-test-server.doubletapp.ru/api/"
@@ -21,7 +21,7 @@ interface HabitsService {
     @PUT("habit")
     suspend fun updateHabit(@Body habit: HabitDto): HabitUidDto
 
-    @DELETE("habit")
+    @HTTP(method = "DELETE", path = "habit", hasBody = true)
     suspend fun deleteHabit(@Body habitUid: HabitUidDto)
 }
 

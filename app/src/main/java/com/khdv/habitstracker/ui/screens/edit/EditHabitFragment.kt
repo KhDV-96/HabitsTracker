@@ -1,9 +1,7 @@
 package com.khdv.habitstracker.ui.screens.edit
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -21,15 +19,17 @@ class EditHabitFragment : Fragment() {
 
     private val viewModel: EditHabitViewModel by viewModels {
         val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
-        val args = EditHabitFragmentArgs.fromBundle(requireArguments())
         EditHabitViewModelFactory(HabitsRepository(dao, HabitsApi.service), args.habitId)
     }
     private lateinit var requiredTextFields: List<EditText>
+    private lateinit var args: EditHabitFragmentArgs
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentEditHabitBinding.inflate(inflater, container, false)
+
+        args = EditHabitFragmentArgs.fromBundle(requireArguments())
 
         binding.viewModel = viewModel
         binding.saveButton.setOnClickListener { saveHabit() }
@@ -37,6 +37,8 @@ class EditHabitFragment : Fragment() {
         requiredTextFields = with(binding) { listOf(title, description, quantity, periodicity) }
 
         binding.lifecycleOwner = this
+
+        setHasOptionsMenu(args.habitId != null)
 
         return binding.root
     }
@@ -53,6 +55,19 @@ class EditHabitFragment : Fragment() {
             ActionEventObserver {
                 findNavController().navigateUp()
             })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.habit_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.delete_habit -> {
+            viewModel.deleteHabit()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     private fun saveHabit() {
