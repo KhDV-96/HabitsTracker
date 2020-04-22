@@ -2,7 +2,9 @@ package com.khdv.habitstracker.data
 
 import com.khdv.habitstracker.db.HabitEntity
 import com.khdv.habitstracker.model.Habit
+import com.khdv.habitstracker.network.ErrorDto
 import com.khdv.habitstracker.network.HabitDto
+import com.khdv.habitstracker.network.HabitsApiException
 import com.khdv.habitstracker.util.toEnum
 import java.util.*
 
@@ -21,3 +23,5 @@ internal fun HabitDto.toEntity() = HabitEntity(
 internal fun Habit.toDto() = HabitDto(
     color, quantity, date.time, description, periodicity, priority.ordinal, title, type.ordinal, id
 )
+
+internal fun ErrorDto.toException() = HabitsApiException(code, message)

@@ -6,15 +6,21 @@ import com.khdv.habitstracker.model.Habit
 import com.khdv.habitstracker.util.ActionEvent
 import com.khdv.habitstracker.util.ContentEvent
 import com.khdv.habitstracker.util.Order
+import com.khdv.habitstracker.util.Result
 
 class HabitsViewModel(repository: HabitsRepository) : ViewModel() {
 
-    private val habits = repository.getAll()
+    private val requestResult = repository.getAll()
+    private val habits = MediatorLiveData<List<Habit>>()
     private val displayedHabits = MediatorLiveData<Sequence<Habit>>()
     private val typedHabits = mutableMapOf<Habit.Type, LiveData<List<Habit>>>()
     private val priorityOrder = MutableLiveData<Order>()
 
     val titleFilter = MutableLiveData<String>()
+
+    private val _error = MutableLiveData<ContentEvent<Throwable>>()
+    val error: LiveData<ContentEvent<Throwable>>
+        get() = _error
 
     private val _navigateToHabitCreation = MutableLiveData<ActionEvent>()
     val navigateToHabitCreation: LiveData<ActionEvent>
@@ -23,6 +29,15 @@ class HabitsViewModel(repository: HabitsRepository) : ViewModel() {
     private val _navigateToHabitEditing = MutableLiveData<ContentEvent<String>>()
     val navigateToHabitEditing: LiveData<ContentEvent<String>>
         get() = _navigateToHabitEditing
+
+    init {
+        habits.addSource(requestResult) {
+            when (it) {
+                is Result.Success -> habits.value = it.data
+                is Result.Error -> _error.value = ContentEvent(it.throwable)
+            }
+        }
+    }
 
     init {
         displayedHabits.addSource(habits, this::updateDisplayedHabits)

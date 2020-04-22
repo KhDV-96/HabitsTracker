@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.model.Habit
 import com.khdv.habitstracker.util.ActionEvent
+import com.khdv.habitstracker.util.ContentEvent
+import com.khdv.habitstracker.util.Result
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -29,6 +31,10 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
     val periodicity = MutableLiveData<String>()
     private val color = MutableLiveData<Int>()
 
+    private val _error = MutableLiveData<ContentEvent<Throwable>>()
+    val error: LiveData<ContentEvent<Throwable>>
+        get() = _error
+
     private val _returnToHomeScreen = MutableLiveData<ActionEvent>()
     val returnToHomeScreen: LiveData<ActionEvent>
         get() = _returnToHomeScreen
@@ -44,11 +50,14 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
     fun saveHabit() {
         val habit = createHabit()
         viewModelScope.launch {
-            when (habitId) {
+            val result = when (habitId) {
                 null -> repository.insert(habit)
                 else -> repository.update(habit)
             }
-            _returnToHomeScreen.value = ActionEvent()
+            when (result) {
+                is Result.Success -> _returnToHomeScreen.value = ActionEvent()
+                is Result.Error -> _error.value = ContentEvent(result.throwable)
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package com.khdv.habitstracker.network
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
@@ -42,6 +43,11 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(MoshiConverterFactory.create())
     .build()
+
+private val errorConverter = retrofit
+    .responseBodyConverter<ErrorDto>(ErrorDto::class.java, emptyArray())
+
+fun <T> Response<T>.error() = errorBody()?.let(errorConverter::convert)
 
 object HabitsApi {
     val service: HabitsService by lazy {

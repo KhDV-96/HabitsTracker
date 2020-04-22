@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -14,12 +15,13 @@ import com.khdv.habitstracker.databinding.FragmentEditHabitBinding
 import com.khdv.habitstracker.db.HabitsTrackerDatabase
 import com.khdv.habitstracker.network.HabitsApi
 import com.khdv.habitstracker.util.ActionEventObserver
+import com.khdv.habitstracker.util.ContentEventObserver
 
 class EditHabitFragment : Fragment() {
 
     private val viewModel: EditHabitViewModel by viewModels {
         val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
-        val args = EditHabitFragmentArgs.fromBundle(arguments!!)
+        val args = EditHabitFragmentArgs.fromBundle(requireArguments())
         EditHabitViewModelFactory(HabitsRepository(dao, HabitsApi.service), args.habitId)
     }
     private lateinit var requiredTextFields: List<EditText>
@@ -32,7 +34,7 @@ class EditHabitFragment : Fragment() {
         binding.viewModel = viewModel
         binding.saveButton.setOnClickListener { saveHabit() }
 
-        requiredTextFields = listOf(binding.title, binding.quantity, binding.periodicity)
+        requiredTextFields = with(binding) { listOf(title, description, quantity, periodicity) }
 
         binding.lifecycleOwner = this
 
@@ -42,6 +44,10 @@ class EditHabitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.error.observe(viewLifecycleOwner, ContentEventObserver {
+            val message = getString(R.string.connection_error_message)
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        })
         viewModel.returnToHomeScreen.observe(viewLifecycleOwner, ActionEventObserver {
             findNavController().navigateUp()
         })

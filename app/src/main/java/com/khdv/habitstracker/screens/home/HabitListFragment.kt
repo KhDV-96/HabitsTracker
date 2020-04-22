@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.khdv.habitstracker.R
 import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentHabitListBinding
 import com.khdv.habitstracker.db.HabitsTrackerDatabase
@@ -59,11 +61,15 @@ class HabitListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val type = Habit.Type.valueOf(arguments!!.getString(HABIT_TYPE_ARGUMENT)!!)
+        val type = Habit.Type.valueOf(requireArguments().getString(HABIT_TYPE_ARGUMENT)!!)
 
         viewModel.getHabitsWithType(type).observe(viewLifecycleOwner, Observer(adapter::submitList))
         viewModel.navigateToHabitEditing.observe(viewLifecycleOwner, ContentEventObserver {
             navigateToEditHabit(it)
+        })
+        viewModel.error.observe(viewLifecycleOwner, ContentEventObserver {
+            val message = getString(R.string.connection_error_message)
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         })
     }
 
