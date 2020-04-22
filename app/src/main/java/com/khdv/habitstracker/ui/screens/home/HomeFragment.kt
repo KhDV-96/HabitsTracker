@@ -1,4 +1,4 @@
-package com.khdv.habitstracker.screens.home
+package com.khdv.habitstracker.ui.screens.home
 
 import android.content.Context
 import android.os.Bundle
@@ -14,7 +14,7 @@ import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentHomeBinding
 import com.khdv.habitstracker.db.HabitsTrackerDatabase
 import com.khdv.habitstracker.network.HabitsApi
-import com.khdv.habitstracker.util.ActionEventObserver
+import com.khdv.habitstracker.ui.ActionEventObserver
 
 class HomeFragment : Fragment() {
 
@@ -46,9 +46,10 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.navigateToHabitCreation.observe(viewLifecycleOwner, ActionEventObserver {
-            navigateToCreateHabit()
-        })
+        viewModel.navigateToHabitCreation.observe(viewLifecycleOwner,
+            ActionEventObserver {
+                navigateToCreateHabit()
+            })
     }
 
     private fun navigateToCreateHabit() {

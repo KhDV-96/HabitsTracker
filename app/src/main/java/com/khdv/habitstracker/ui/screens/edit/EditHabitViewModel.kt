@@ -1,4 +1,4 @@
-package com.khdv.habitstracker.screens.edit
+package com.khdv.habitstracker.ui.screens.edit
 
 import android.graphics.Color
 import androidx.lifecycle.LiveData
@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.model.Habit
-import com.khdv.habitstracker.util.ActionEvent
-import com.khdv.habitstracker.util.ContentEvent
+import com.khdv.habitstracker.ui.ActionEvent
+import com.khdv.habitstracker.ui.ContentEvent
 import com.khdv.habitstracker.util.Result
 import kotlinx.coroutines.launch
 import java.util.*
@@ -55,8 +55,10 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
                 else -> repository.update(habit)
             }
             when (result) {
-                is Result.Success -> _returnToHomeScreen.value = ActionEvent()
-                is Result.Error -> _error.value = ContentEvent(result.throwable)
+                is Result.Success -> _returnToHomeScreen.value =
+                    ActionEvent()
+                is Result.Error -> _error.value =
+                    ContentEvent(result.throwable)
             }
         }
     }

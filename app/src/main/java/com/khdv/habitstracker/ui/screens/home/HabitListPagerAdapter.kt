@@ -1,4 +1,4 @@
-package com.khdv.habitstracker.screens.home
+package com.khdv.habitstracker.ui.screens.home
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

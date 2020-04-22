@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".screens.home.HabitViewHolder">
+    tools:context=".ui.screens.home.HabitViewHolder">
 
     <data>
 
@@ -12,7 +12,7 @@
 
         <variable
             name="clickListener"
-            type="com.khdv.habitstracker.screens.home.HabitClickListener" />
+            type="com.khdv.habitstracker.ui.screens.home.HabitClickListener" />
     </data>
 
     <LinearLayout

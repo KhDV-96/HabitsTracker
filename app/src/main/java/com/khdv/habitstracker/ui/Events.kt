@@ -1,4 +1,4 @@
-package com.khdv.habitstracker.util
+package com.khdv.habitstracker.ui
 
 import androidx.lifecycle.Observer
 

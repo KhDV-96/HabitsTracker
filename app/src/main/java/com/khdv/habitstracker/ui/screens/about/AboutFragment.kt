@@ -1,11 +1,10 @@
-package com.khdv.habitstracker.screens.about
+package com.khdv.habitstracker.ui.screens.about
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
 import com.khdv.habitstracker.R
 
 class AboutFragment : Fragment() {

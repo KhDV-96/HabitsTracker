@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".screens.home.HabitFiltersAndSortsFragment">
+    tools:context=".ui.screens.home.HabitFiltersAndSortsFragment">
 
     <data>
 
@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.khdv.habitstracker.screens.home.HabitsViewModel" />
+            type="com.khdv.habitstracker.ui.screens.home.HabitsViewModel" />
     </data>
 
     <LinearLayout

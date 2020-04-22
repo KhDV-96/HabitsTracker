@@ -1,4 +1,4 @@
-package com.khdv.habitstracker.screens.edit
+package com.khdv.habitstracker.ui.screens.edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

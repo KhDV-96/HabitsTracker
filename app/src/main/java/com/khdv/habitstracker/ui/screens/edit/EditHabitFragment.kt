@@ -1,4 +1,4 @@
-package com.khdv.habitstracker.screens.edit
+package com.khdv.habitstracker.ui.screens.edit
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,8 +14,8 @@ import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentEditHabitBinding
 import com.khdv.habitstracker.db.HabitsTrackerDatabase
 import com.khdv.habitstracker.network.HabitsApi
-import com.khdv.habitstracker.util.ActionEventObserver
-import com.khdv.habitstracker.util.ContentEventObserver
+import com.khdv.habitstracker.ui.ActionEventObserver
+import com.khdv.habitstracker.ui.ContentEventObserver
 
 class EditHabitFragment : Fragment() {
 
@@ -44,13 +44,15 @@ class EditHabitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.error.observe(viewLifecycleOwner, ContentEventObserver {
-            val message = getString(R.string.connection_error_message)
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-        })
-        viewModel.returnToHomeScreen.observe(viewLifecycleOwner, ActionEventObserver {
-            findNavController().navigateUp()
-        })
+        viewModel.error.observe(viewLifecycleOwner,
+            ContentEventObserver {
+                val message = getString(R.string.connection_error_message)
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            })
+        viewModel.returnToHomeScreen.observe(viewLifecycleOwner,
+            ActionEventObserver {
+                findNavController().navigateUp()
+            })
     }
 
     private fun saveHabit() {

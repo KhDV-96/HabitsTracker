@@ -1,4 +1,4 @@
-package com.khdv.habitstracker.screens.home
+package com.khdv.habitstracker.ui.screens.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

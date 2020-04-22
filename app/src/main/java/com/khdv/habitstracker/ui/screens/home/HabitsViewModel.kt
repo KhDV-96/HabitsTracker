@@ -1,10 +1,10 @@
-package com.khdv.habitstracker.screens.home
+package com.khdv.habitstracker.ui.screens.home
 
 import androidx.lifecycle.*
 import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.model.Habit
-import com.khdv.habitstracker.util.ActionEvent
-import com.khdv.habitstracker.util.ContentEvent
+import com.khdv.habitstracker.ui.ActionEvent
+import com.khdv.habitstracker.ui.ContentEvent
 import com.khdv.habitstracker.util.Order
 import com.khdv.habitstracker.util.Result
 
@@ -34,7 +34,8 @@ class HabitsViewModel(repository: HabitsRepository) : ViewModel() {
         habits.addSource(requestResult) {
             when (it) {
                 is Result.Success -> habits.value = it.data
-                is Result.Error -> _error.value = ContentEvent(it.throwable)
+                is Result.Error -> _error.value =
+                    ContentEvent(it.throwable)
             }
         }
     }
@@ -63,7 +64,8 @@ class HabitsViewModel(repository: HabitsRepository) : ViewModel() {
     }
 
     fun editHabit(habit: Habit) {
-        _navigateToHabitEditing.value = ContentEvent(habit.id)
+        _navigateToHabitEditing.value =
+            ContentEvent(habit.id)
     }
 
     private fun updateDisplayedHabits(habits: List<Habit>) {

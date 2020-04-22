@@ -2,17 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".screens.edit.EditHabitFragment">
+    tools:context=".ui.screens.edit.EditHabitFragment">
 
     <data>
 
         <import type="com.khdv.habitstracker.model.Habit" />
 
-        <import type="com.khdv.habitstracker.screens.edit.PriorityConverter" />
+        <import type="com.khdv.habitstracker.ui.screens.edit.PriorityConverter" />
 
         <variable
             name="viewModel"
-            type="com.khdv.habitstracker.screens.edit.EditHabitViewModel" />
+            type="com.khdv.habitstracker.ui.screens.edit.EditHabitViewModel" />
     </data>
 
     <ScrollView

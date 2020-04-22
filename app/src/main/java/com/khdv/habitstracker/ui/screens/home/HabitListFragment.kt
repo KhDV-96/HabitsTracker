@@ -1,4 +1,4 @@
-package com.khdv.habitstracker.screens.home
+package com.khdv.habitstracker.ui.screens.home
 
 import android.content.Context
 import android.os.Bundle
@@ -18,7 +18,7 @@ import com.khdv.habitstracker.databinding.FragmentHabitListBinding
 import com.khdv.habitstracker.db.HabitsTrackerDatabase
 import com.khdv.habitstracker.model.Habit
 import com.khdv.habitstracker.network.HabitsApi
-import com.khdv.habitstracker.util.ContentEventObserver
+import com.khdv.habitstracker.ui.ContentEventObserver
 
 class HabitListFragment : Fragment() {
 
@@ -64,13 +64,15 @@ class HabitListFragment : Fragment() {
         val type = Habit.Type.valueOf(requireArguments().getString(HABIT_TYPE_ARGUMENT)!!)
 
         viewModel.getHabitsWithType(type).observe(viewLifecycleOwner, Observer(adapter::submitList))
-        viewModel.navigateToHabitEditing.observe(viewLifecycleOwner, ContentEventObserver {
-            navigateToEditHabit(it)
-        })
-        viewModel.error.observe(viewLifecycleOwner, ContentEventObserver {
-            val message = getString(R.string.connection_error_message)
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-        })
+        viewModel.navigateToHabitEditing.observe(viewLifecycleOwner,
+            ContentEventObserver {
+                navigateToEditHabit(it)
+            })
+        viewModel.error.observe(viewLifecycleOwner,
+            ContentEventObserver {
+                val message = getString(R.string.connection_error_message)
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            })
     }
 
     private fun navigateToEditHabit(habitId: String) {
