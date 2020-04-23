@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.khdv.habitstracker.R
 import com.khdv.habitstracker.data.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentHabitFiltersAndSortsBinding
 import com.khdv.habitstracker.db.HabitsTrackerDatabase
@@ -15,7 +16,8 @@ class HabitFiltersAndSortsFragment : Fragment() {
 
     private val viewModel: HabitsViewModel by activityViewModels {
         val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
-        HabitsViewModelFactory(HabitsRepository(dao, HabitsApi.service))
+        val delay = resources.getInteger(R.integer.request_delay).toLong()
+        HabitsViewModelFactory(HabitsRepository(dao, HabitsApi.service), delay)
     }
 
     override fun onCreateView(

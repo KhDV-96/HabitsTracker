@@ -19,7 +19,8 @@ class EditHabitFragment : Fragment() {
 
     private val viewModel: EditHabitViewModel by viewModels {
         val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
-        EditHabitViewModelFactory(HabitsRepository(dao, HabitsApi.service), args.habitId)
+        val delay = resources.getInteger(R.integer.request_delay).toLong()
+        EditHabitViewModelFactory(HabitsRepository(dao, HabitsApi.service), args.habitId, delay)
     }
     private lateinit var requiredTextFields: List<EditText>
     private lateinit var args: EditHabitFragmentArgs

@@ -7,8 +7,10 @@ import com.khdv.habitstracker.ui.ActionEvent
 import com.khdv.habitstracker.ui.ContentEvent
 import com.khdv.habitstracker.util.Order
 import com.khdv.habitstracker.util.Result
+import com.khdv.habitstracker.util.repeatUntilSuccess
+import kotlinx.coroutines.launch
 
-class HabitsViewModel(repository: HabitsRepository) : ViewModel() {
+class HabitsViewModel(repository: HabitsRepository, private val requestDelay: Long) : ViewModel() {
 
     private val requestResult = repository.getAll()
     private val habits = MediatorLiveData<List<Habit>>()
@@ -34,8 +36,10 @@ class HabitsViewModel(repository: HabitsRepository) : ViewModel() {
         habits.addSource(requestResult) {
             when (it) {
                 is Result.Success -> habits.value = it.data
-                is Result.Error -> _error.value =
-                    ContentEvent(it.throwable)
+                is Result.Error<*> -> {
+                    _error.value = ContentEvent(it.throwable)
+                    reloadHabits(it)
+                }
             }
         }
     }
@@ -84,5 +88,9 @@ class HabitsViewModel(repository: HabitsRepository) : ViewModel() {
         else -> sortedWith(Comparator { h1, h2 ->
             order.factor * h1.priority.compareTo(h2.priority)
         })
+    }
+
+    private fun reloadHabits(result: Result<List<Habit>>) = viewModelScope.launch {
+        result.repeatUntilSuccess(requestDelay)
     }
 }

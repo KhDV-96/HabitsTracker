@@ -10,10 +10,16 @@ import com.khdv.habitstracker.model.Habit
 import com.khdv.habitstracker.ui.ActionEvent
 import com.khdv.habitstracker.ui.ContentEvent
 import com.khdv.habitstracker.util.Result
+import com.khdv.habitstracker.util.repeatUntilSuccess
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.*
 
-class EditHabitViewModel(private val repository: HabitsRepository, private val habitId: String?) :
+class EditHabitViewModel(
+    private val repository: HabitsRepository,
+    private val habitId: String?,
+    private val requestDelay: Long
+) :
     ViewModel() {
 
     companion object {
@@ -24,6 +30,8 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
     }
 
     private lateinit var habit: Habit
+    private lateinit var lastError: Throwable
+    private var job: Job? = null
     val title = MutableLiveData<String>()
     val description = MutableLiveData("")
     val priority = MutableLiveData(Habit.Priority.HIGH)
@@ -49,8 +57,12 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
     }
 
     fun saveHabit() {
+        if (job?.isActive == true) {
+            showError(lastError)
+            return
+        }
         val habit = createHabit()
-        viewModelScope.launch {
+        job = viewModelScope.launch {
             val result = when (habitId) {
                 null -> repository.insert(habit)
                 else -> repository.update(habit)
@@ -59,9 +71,15 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
         }
     }
 
-    fun deleteHabit() = viewModelScope.launch {
-        val result = repository.delete(habit)
-        handleResult(result)
+    fun deleteHabit() {
+        if (job?.isActive == true) {
+            showError(lastError)
+            return
+        }
+        job = viewModelScope.launch {
+            val result = repository.delete(habit)
+            handleResult(result)
+        }
     }
 
     private fun loadHabit(id: String) = viewModelScope.launch {
@@ -91,8 +109,18 @@ class EditHabitViewModel(private val repository: HabitsRepository, private val h
         color.value ?: randomColor()
     )
 
-    private fun <T> handleResult(result: Result<T>) = when (result) {
-        is Result.Success -> _returnToHomeScreen.value = ActionEvent()
-        is Result.Error -> _error.value = ContentEvent(result.throwable)
+    private suspend fun <T> handleResult(result: Result<T>) {
+        when (result) {
+            is Result.Success -> _returnToHomeScreen.value = ActionEvent()
+            is Result.Error<*> -> {
+                showError(result.throwable)
+                result.repeatUntilSuccess<Unit>(requestDelay) { lastError = it }
+                _returnToHomeScreen.value = ActionEvent()
+            }
+        }
+    }
+
+    private fun showError(throwable: Throwable) {
+        _error.value = ContentEvent(throwable)
     }
 }

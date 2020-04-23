@@ -22,11 +22,8 @@ class HabitsRepository(private val habitDao: HabitDao, private val habitsService
             Result.Success(it.map(HabitEntity::toModel))
         }
         emitSource(cachedHabits)
-        val result = makeSafetyApiCall {
-            val habits = habitsService.getHabits().map(HabitDto::toEntity)
-            habitDao.insertAll(habits)
-        }
-        if (result is Result.Error) {
+        val result = refreshHabits()
+        if (result is Result.Error<*>) {
             emit(result)
             emitSource(cachedHabits)
         }
@@ -36,8 +33,8 @@ class HabitsRepository(private val habitDao: HabitDao, private val habitsService
         habitDao.getById(id).toModel()
     }
 
-    suspend fun insert(habit: Habit) = withContext(Dispatchers.IO) {
-        makeSafetyApiCall {
+    suspend fun insert(habit: Habit): Result<*> = withContext(Dispatchers.IO) {
+        performSafely({ insert(habit) }) {
             habitsService.updateHabit(habit.toDto())
         }.also {
             if (it is Result.Success) {
@@ -47,8 +44,8 @@ class HabitsRepository(private val habitDao: HabitDao, private val habitsService
         }
     }
 
-    suspend fun update(habit: Habit) = withContext(Dispatchers.IO) {
-        makeSafetyApiCall {
+    suspend fun update(habit: Habit): Result<*> = withContext(Dispatchers.IO) {
+        performSafely({ update(habit) }) {
             habitsService.updateHabit(habit.toDto())
         }.also {
             if (it is Result.Success)
@@ -56,8 +53,8 @@ class HabitsRepository(private val habitDao: HabitDao, private val habitsService
         }
     }
 
-    suspend fun delete(habit: Habit) = withContext(Dispatchers.IO) {
-        makeSafetyApiCall {
+    suspend fun delete(habit: Habit): Result<*> = withContext(Dispatchers.IO) {
+        performSafely({ delete(habit) }) {
             habitsService.deleteHabit(HabitUidDto(habit.id))
         }.also {
             if (it is Result.Success)
@@ -65,12 +62,20 @@ class HabitsRepository(private val habitDao: HabitDao, private val habitsService
         }
     }
 
-    private suspend fun <T> makeSafetyApiCall(call: suspend () -> T) = try {
+    private suspend fun refreshHabits(): Result<Unit> = performSafely(this::refreshHabits) {
+        val habits = habitsService.getHabits().map(HabitDto::toEntity)
+        habitDao.insertAll(habits)
+    }
+
+    private suspend fun <T, R> performSafely(
+        retry: suspend () -> Result<T>,
+        call: suspend () -> R
+    ): Result<R> = try {
         Result.Success(call.invoke())
     } catch (exception: HttpException) {
         val error = exception.response()?.error()
-        Result.Error(error?.toException() ?: exception)
+        Result.Error(error?.toException() ?: exception, retry)
     } catch (exception: Exception) {
-        Result.Error(exception)
+        Result.Error(exception, retry)
     }
 }

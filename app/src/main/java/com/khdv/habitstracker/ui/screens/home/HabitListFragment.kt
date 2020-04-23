@@ -33,7 +33,8 @@ class HabitListFragment : Fragment() {
 
     private val viewModel: HabitsViewModel by activityViewModels {
         val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
-        HabitsViewModelFactory(HabitsRepository(dao, HabitsApi.service))
+        val delay = resources.getInteger(R.integer.request_delay).toLong()
+        HabitsViewModelFactory(HabitsRepository(dao, HabitsApi.service), delay)
     }
     private lateinit var listDecoration: DividerItemDecoration
     private lateinit var adapter: HabitsAdapter
