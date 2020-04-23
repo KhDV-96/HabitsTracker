@@ -3,30 +3,38 @@ package com.khdv.habitstracker.ui
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import com.khdv.habitstracker.R
-import kotlinx.android.synthetic.main.activity_main.*
+import com.khdv.habitstracker.databinding.ActivityMainBinding
+import com.khdv.habitstracker.databinding.NavHeaderBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        val navController = findNavController(R.id.nav_host_fragment)
-        NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
-        NavigationUI.setupWithNavController(nav_view, navController)
+        val header = binding.navView.getHeaderView(0)
+        NavHeaderBinding.bind(header)
+
+        navController = findNavController(R.id.nav_host_fragment)
+        NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
+        NavigationUI.setupWithNavController(binding.navView, navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
-        return NavigationUI.navigateUp(navController, drawer_layout) || super.onSupportNavigateUp()
+        return NavigationUI.navigateUp(navController, binding.drawerLayout) ||
+                super.onSupportNavigateUp()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
     }
 }
