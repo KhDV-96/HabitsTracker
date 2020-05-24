@@ -5,6 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+const val DATABASE_FILE = "habits_tracker.db"
+
 @Database(entities = [HabitEntity::class], version = 1, exportSchema = false)
 abstract class HabitsTrackerDatabase : RoomDatabase() {
 
@@ -21,7 +23,7 @@ abstract class HabitsTrackerDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context) = Room.databaseBuilder(
             context.applicationContext,
             HabitsTrackerDatabase::class.java,
-            "habits_tracker.db"
+            DATABASE_FILE
         ).build()
     }
 }

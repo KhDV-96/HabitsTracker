@@ -1,5 +1,6 @@
 package com.khdv.habitstracker.presentation.screens.edit
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.EditText
@@ -8,22 +9,29 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.khdv.habitstracker.R
-import com.khdv.habitstracker.data.db.HabitsTrackerDatabase
-import com.khdv.habitstracker.data.network.HabitsApi
 import com.khdv.habitstracker.data.repositories.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentEditHabitBinding
 import com.khdv.habitstracker.presentation.ActionEventObserver
 import com.khdv.habitstracker.presentation.ContentEventObserver
+import com.khdv.habitstracker.presentation.HabitsTrackerApplication
+import javax.inject.Inject
 
 class EditHabitFragment : Fragment() {
 
     private val viewModel: EditHabitViewModel by viewModels {
-        val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
         val delay = resources.getInteger(R.integer.request_delay).toLong()
-        EditHabitViewModelFactory(HabitsRepository(dao, HabitsApi.service), args.habitId, delay)
+        EditHabitViewModelFactory(habitsRepository, args.habitId, delay)
     }
+
+    @Inject
+    lateinit var habitsRepository: HabitsRepository
     private lateinit var requiredTextFields: List<EditText>
     private lateinit var args: EditHabitFragmentArgs
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as HabitsTrackerApplication).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

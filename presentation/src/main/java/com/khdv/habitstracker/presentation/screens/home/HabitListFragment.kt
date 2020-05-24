@@ -13,12 +13,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.khdv.habitstracker.R
-import com.khdv.habitstracker.data.db.HabitsTrackerDatabase
-import com.khdv.habitstracker.data.network.HabitsApi
 import com.khdv.habitstracker.data.repositories.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentHabitListBinding
 import com.khdv.habitstracker.domain.models.Habit
 import com.khdv.habitstracker.presentation.ContentEventObserver
+import com.khdv.habitstracker.presentation.HabitsTrackerApplication
+import javax.inject.Inject
 
 class HabitListFragment : Fragment() {
 
@@ -32,15 +32,18 @@ class HabitListFragment : Fragment() {
     }
 
     private val viewModel: HabitsViewModel by activityViewModels {
-        val dao = HabitsTrackerDatabase.getInstance(requireContext()).habitDao()
         val delay = resources.getInteger(R.integer.request_delay).toLong()
-        HabitsViewModelFactory(HabitsRepository(dao, HabitsApi.service), delay)
+        HabitsViewModelFactory(habitsRepository, delay)
     }
+
+    @Inject
+    lateinit var habitsRepository: HabitsRepository
     private lateinit var listDecoration: DividerItemDecoration
     private lateinit var adapter: HabitsAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        (requireActivity().application as HabitsTrackerApplication).appComponent.inject(this)
         listDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
     }
 

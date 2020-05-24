@@ -18,8 +18,14 @@ import com.khdv.habitstracker.domain.shared.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class HabitsRepository(private val habitDao: HabitDao, private val habitsService: HabitsService) {
+@Singleton
+class HabitsRepository @Inject constructor(
+    private val habitDao: HabitDao,
+    private val habitsService: HabitsService
+) {
 
     fun getAll(): LiveData<Result<List<Habit>>> = liveData(Dispatchers.IO) {
         val cachedHabits: LiveData<Result<List<Habit>>> = habitDao.getAll().map {

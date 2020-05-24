@@ -38,7 +38,7 @@ private val client = OkHttpClient.Builder()
     .addInterceptor(AuthorizationInterceptor)
     .build()
 
-private val retrofit = Retrofit.Builder()
+val retrofit: Retrofit = Retrofit.Builder()
     .client(client)
     .baseUrl(BASE_URL)
     .addConverterFactory(MoshiConverterFactory.create())
