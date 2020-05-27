@@ -6,11 +6,14 @@ import com.khdv.habitstracker.data.db.DATABASE_FILE
 import com.khdv.habitstracker.data.db.HabitsTrackerDatabase
 import com.khdv.habitstracker.data.network.HabitsService
 import com.khdv.habitstracker.data.network.retrofit
+import com.khdv.habitstracker.data.repositories.HabitsRepositoryImpl
+import com.khdv.habitstracker.domain.interactors.HabitsRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 
-@Module
+@Module(includes = [HabitsModule.Declarations::class])
 class HabitsModule(private val context: Context) {
 
     @Provides
@@ -32,4 +35,11 @@ class HabitsModule(private val context: Context) {
 
     @Provides
     fun provideRetrofit() = retrofit
+
+    @Module
+    interface Declarations {
+
+        @Binds
+        fun bindHabitsRepository(repository: HabitsRepositoryImpl): HabitsRepository
+    }
 }

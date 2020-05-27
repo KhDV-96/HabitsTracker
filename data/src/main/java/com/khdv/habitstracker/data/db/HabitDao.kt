@@ -1,13 +1,13 @@
 package com.khdv.habitstracker.data.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HabitDao {
 
     @Query("SELECT * FROM habits")
-    fun getAll(): LiveData<List<HabitEntity>>
+    fun getAll(): Flow<List<HabitEntity>>
 
     @Query("SELECT * FROM habits WHERE id = :id")
     suspend fun getById(id: String): HabitEntity

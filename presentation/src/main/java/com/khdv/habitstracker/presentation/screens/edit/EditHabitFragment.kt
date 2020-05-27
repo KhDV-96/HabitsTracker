@@ -9,8 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.khdv.habitstracker.R
-import com.khdv.habitstracker.data.repositories.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentEditHabitBinding
+import com.khdv.habitstracker.domain.interactors.GetHabitUseCase
+import com.khdv.habitstracker.domain.interactors.ManageHabitUseCase
 import com.khdv.habitstracker.presentation.ActionEventObserver
 import com.khdv.habitstracker.presentation.ContentEventObserver
 import com.khdv.habitstracker.presentation.HabitsTrackerApplication
@@ -20,11 +21,15 @@ class EditHabitFragment : Fragment() {
 
     private val viewModel: EditHabitViewModel by viewModels {
         val delay = resources.getInteger(R.integer.request_delay).toLong()
-        EditHabitViewModelFactory(habitsRepository, args.habitId, delay)
+        EditHabitViewModelFactory(getHabitUseCase, manageHabitUseCase, args.habitId, delay)
     }
 
     @Inject
-    lateinit var habitsRepository: HabitsRepository
+    lateinit var getHabitUseCase: GetHabitUseCase
+
+    @Inject
+    lateinit var manageHabitUseCase: ManageHabitUseCase
+
     private lateinit var requiredTextFields: List<EditText>
     private lateinit var args: EditHabitFragmentArgs
 

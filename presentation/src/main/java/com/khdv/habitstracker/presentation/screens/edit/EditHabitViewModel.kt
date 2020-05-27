@@ -5,7 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.khdv.habitstracker.data.repositories.HabitsRepository
+import com.khdv.habitstracker.domain.interactors.GetHabitUseCase
+import com.khdv.habitstracker.domain.interactors.ManageHabitUseCase
 import com.khdv.habitstracker.domain.models.Habit
 import com.khdv.habitstracker.domain.shared.Result
 import com.khdv.habitstracker.presentation.ActionEvent
@@ -16,11 +17,11 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 class EditHabitViewModel(
-    private val repository: HabitsRepository,
+    private val getHabitUseCase: GetHabitUseCase,
+    private val manageHabitUseCase: ManageHabitUseCase,
     private val habitId: String?,
     private val requestDelay: Long
-) :
-    ViewModel() {
+) : ViewModel() {
 
     companion object {
         private fun randomColor(): Int {
@@ -63,11 +64,7 @@ class EditHabitViewModel(
         }
         val habit = createHabit()
         job = viewModelScope.launch {
-            val result = when (habitId) {
-                null -> repository.insert(habit)
-                else -> repository.update(habit)
-            }
-            handleResult(result)
+            handleResult(manageHabitUseCase.saveHabit(habit))
         }
     }
 
@@ -77,13 +74,12 @@ class EditHabitViewModel(
             return
         }
         job = viewModelScope.launch {
-            val result = repository.delete(habit)
-            handleResult(result)
+            handleResult(manageHabitUseCase.deleteHabit(habit))
         }
     }
 
     private fun loadHabit(id: String) = viewModelScope.launch {
-        habit = repository.getById(id)
+        habit = getHabitUseCase.getHabit(id)
         fillProperties(habit)
     }
 

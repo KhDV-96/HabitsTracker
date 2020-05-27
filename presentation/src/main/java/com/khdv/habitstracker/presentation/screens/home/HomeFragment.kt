@@ -10,8 +10,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.khdv.habitstracker.R
-import com.khdv.habitstracker.data.repositories.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentHomeBinding
+import com.khdv.habitstracker.domain.interactors.LoadHabitsUseCase
 import com.khdv.habitstracker.presentation.ActionEventObserver
 import com.khdv.habitstracker.presentation.HabitsTrackerApplication
 import javax.inject.Inject
@@ -20,11 +20,11 @@ class HomeFragment : Fragment() {
 
     private val viewModel: HabitsViewModel by activityViewModels {
         val delay = resources.getInteger(R.integer.request_delay).toLong()
-        HabitsViewModelFactory(habitsRepository, delay)
+        HabitsViewModelFactory(loadHabitsUseCase, delay)
     }
 
     @Inject
-    lateinit var habitsRepository: HabitsRepository
+    lateinit var loadHabitsUseCase: LoadHabitsUseCase
     private lateinit var tabLabels: Array<String>
 
     override fun onAttach(context: Context) {

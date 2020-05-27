@@ -8,9 +8,9 @@ dependencies {
     //noinspection DifferentStdlibGradleVersion
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    // DI
+    implementation "javax.inject:javax.inject:1"
+
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
 }
-
-sourceCompatibility = "8"
-targetCompatibility = "8"

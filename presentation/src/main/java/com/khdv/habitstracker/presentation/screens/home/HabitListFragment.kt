@@ -13,8 +13,8 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.khdv.habitstracker.R
-import com.khdv.habitstracker.data.repositories.HabitsRepository
 import com.khdv.habitstracker.databinding.FragmentHabitListBinding
+import com.khdv.habitstracker.domain.interactors.LoadHabitsUseCase
 import com.khdv.habitstracker.domain.models.Habit
 import com.khdv.habitstracker.presentation.ContentEventObserver
 import com.khdv.habitstracker.presentation.HabitsTrackerApplication
@@ -33,11 +33,11 @@ class HabitListFragment : Fragment() {
 
     private val viewModel: HabitsViewModel by activityViewModels {
         val delay = resources.getInteger(R.integer.request_delay).toLong()
-        HabitsViewModelFactory(habitsRepository, delay)
+        HabitsViewModelFactory(loadHabitsUseCase, delay)
     }
 
     @Inject
-    lateinit var habitsRepository: HabitsRepository
+    lateinit var loadHabitsUseCase: LoadHabitsUseCase
     private lateinit var listDecoration: DividerItemDecoration
     private lateinit var adapter: HabitsAdapter
 

@@ -1,7 +1,7 @@
 package com.khdv.habitstracker.presentation.screens.home
 
 import androidx.lifecycle.*
-import com.khdv.habitstracker.data.repositories.HabitsRepository
+import com.khdv.habitstracker.domain.interactors.LoadHabitsUseCase
 import com.khdv.habitstracker.domain.models.Habit
 import com.khdv.habitstracker.domain.shared.Result
 import com.khdv.habitstracker.presentation.ActionEvent
@@ -10,9 +10,9 @@ import com.khdv.habitstracker.presentation.util.Order
 import com.khdv.habitstracker.presentation.util.repeatUntilSuccess
 import kotlinx.coroutines.launch
 
-class HabitsViewModel(repository: HabitsRepository, private val requestDelay: Long) : ViewModel() {
+class HabitsViewModel(useCase: LoadHabitsUseCase, private val requestDelay: Long) : ViewModel() {
 
-    private val requestResult = repository.getAll()
+    private val requestResult = useCase.loadHabits().asLiveData()
     private val habits = MediatorLiveData<List<Habit>>()
     private val displayedHabits = MediatorLiveData<Sequence<Habit>>()
     private val typedHabits = mutableMapOf<Habit.Type, LiveData<List<Habit>>>()

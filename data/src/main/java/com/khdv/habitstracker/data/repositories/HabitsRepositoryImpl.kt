@@ -1,8 +1,5 @@
 package com.khdv.habitstracker.data.repositories
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.map
 import com.khdv.habitstracker.data.db.HabitDao
 import com.khdv.habitstracker.data.db.HabitEntity
 import com.khdv.habitstracker.data.mappers.toDto
@@ -13,37 +10,45 @@ import com.khdv.habitstracker.data.network.HabitDto
 import com.khdv.habitstracker.data.network.HabitUidDto
 import com.khdv.habitstracker.data.network.HabitsService
 import com.khdv.habitstracker.data.network.error
+import com.khdv.habitstracker.domain.interactors.HabitsRepository
 import com.khdv.habitstracker.domain.models.Habit
 import com.khdv.habitstracker.domain.shared.Result
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class HabitsRepository @Inject constructor(
+class HabitsRepositoryImpl @Inject constructor(
     private val habitDao: HabitDao,
     private val habitsService: HabitsService
-) {
+) : HabitsRepository {
 
-    fun getAll(): LiveData<Result<List<Habit>>> = liveData(Dispatchers.IO) {
-        val cachedHabits: LiveData<Result<List<Habit>>> = habitDao.getAll().map {
+    @ExperimentalCoroutinesApi
+    override fun getAll() = flow {
+        val cachedHabits = habitDao.getAll().map {
             Result.Success(it.map(HabitEntity::toModel))
         }
-        emitSource(cachedHabits)
+        emit(cachedHabits.first())
         val result = refreshHabits()
         if (result is Result.Error<*>) {
-            emit(result)
-            emitSource(cachedHabits)
+            @Suppress("UNCHECKED_CAST")
+            emit(result as Result<List<Habit>>)
         }
+        emitAll(cachedHabits)
     }
 
-    suspend fun getById(id: String) = withContext(Dispatchers.IO) {
+    override suspend fun getById(id: String) = withContext(Dispatchers.IO) {
         habitDao.getById(id).toModel()
     }
 
-    suspend fun insert(habit: Habit): Result<*> = withContext(Dispatchers.IO) {
+    override suspend fun insert(habit: Habit): Result<*> = withContext(Dispatchers.IO) {
         performSafely({ insert(habit) }) {
             habitsService.updateHabit(habit.toDto())
         }.also {
@@ -54,7 +59,7 @@ class HabitsRepository @Inject constructor(
         }
     }
 
-    suspend fun update(habit: Habit): Result<*> = withContext(Dispatchers.IO) {
+    override suspend fun update(habit: Habit): Result<*> = withContext(Dispatchers.IO) {
         performSafely({ update(habit) }) {
             habitsService.updateHabit(habit.toDto())
         }.also {
@@ -63,7 +68,7 @@ class HabitsRepository @Inject constructor(
         }
     }
 
-    suspend fun delete(habit: Habit): Result<*> = withContext(Dispatchers.IO) {
+    override suspend fun delete(habit: Habit): Result<*> = withContext(Dispatchers.IO) {
         performSafely({ delete(habit) }) {
             habitsService.deleteHabit(HabitUidDto(habit.id))
         }.also {
