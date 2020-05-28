@@ -12,6 +12,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.khdv.habitstracker.R
 import com.khdv.habitstracker.databinding.FragmentHomeBinding
 import com.khdv.habitstracker.domain.interactors.LoadHabitsUseCase
+import com.khdv.habitstracker.domain.interactors.RepeatHabitUseCase
 import com.khdv.habitstracker.presentation.ActionEventObserver
 import com.khdv.habitstracker.presentation.HabitsTrackerApplication
 import javax.inject.Inject
@@ -20,11 +21,15 @@ class HomeFragment : Fragment() {
 
     private val viewModel: HabitsViewModel by activityViewModels {
         val delay = resources.getInteger(R.integer.request_delay).toLong()
-        HabitsViewModelFactory(loadHabitsUseCase, delay)
+        HabitsViewModelFactory(loadHabitsUseCase, repeatHabitUseCase, delay)
     }
 
     @Inject
     lateinit var loadHabitsUseCase: LoadHabitsUseCase
+
+    @Inject
+    lateinit var repeatHabitUseCase: RepeatHabitUseCase
+
     private lateinit var tabLabels: Array<String>
 
     override fun onAttach(context: Context) {

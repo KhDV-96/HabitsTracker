@@ -2,6 +2,7 @@ package com.khdv.habitstracker.presentation.screens.home
 
 import androidx.lifecycle.*
 import com.khdv.habitstracker.domain.interactors.LoadHabitsUseCase
+import com.khdv.habitstracker.domain.interactors.RepeatHabitUseCase
 import com.khdv.habitstracker.domain.models.Habit
 import com.khdv.habitstracker.domain.shared.Result
 import com.khdv.habitstracker.presentation.ActionEvent
@@ -10,15 +11,23 @@ import com.khdv.habitstracker.presentation.util.Order
 import com.khdv.habitstracker.presentation.util.repeatUntilSuccess
 import kotlinx.coroutines.launch
 
-class HabitsViewModel(useCase: LoadHabitsUseCase, private val requestDelay: Long) : ViewModel() {
+class HabitsViewModel(
+    loadUseCase: LoadHabitsUseCase,
+    private val repeatUseCase: RepeatHabitUseCase,
+    private val requestDelay: Long
+) : ViewModel() {
 
-    private val requestResult = useCase.loadHabits().asLiveData()
+    private val requestResult = loadUseCase.loadHabits().asLiveData()
     private val habits = MediatorLiveData<List<Habit>>()
     private val displayedHabits = MediatorLiveData<Sequence<Habit>>()
     private val typedHabits = mutableMapOf<Habit.Type, LiveData<List<Habit>>>()
     private val priorityOrder = MutableLiveData<Order>()
 
     val titleFilter = MutableLiveData<String>()
+
+    private val _showRepeatingStatus = MutableLiveData<ContentEvent<Pair<Habit, Int>>>()
+    val showRepeatingStatus: MutableLiveData<ContentEvent<Pair<Habit, Int>>>
+        get() = _showRepeatingStatus
 
     private val _error = MutableLiveData<ContentEvent<Throwable>>()
     val error: LiveData<ContentEvent<Throwable>>
@@ -37,8 +46,7 @@ class HabitsViewModel(useCase: LoadHabitsUseCase, private val requestDelay: Long
             when (it) {
                 is Result.Success -> habits.value = it.data
                 is Result.Error<*> -> {
-                    _error.value =
-                        ContentEvent(it.throwable)
+                    _error.value = ContentEvent(it.throwable)
                     reloadHabits(it)
                 }
             }
@@ -65,13 +73,20 @@ class HabitsViewModel(useCase: LoadHabitsUseCase, private val requestDelay: Long
     }
 
     fun createHabit() {
-        _navigateToHabitCreation.value =
-            ActionEvent()
+        _navigateToHabitCreation.value = ActionEvent()
     }
 
     fun editHabit(habit: Habit) {
-        _navigateToHabitEditing.value =
-            ContentEvent(habit.id)
+        _navigateToHabitEditing.value = ContentEvent(habit.id)
+    }
+
+    fun repeatHabit(habit: Habit) {
+        viewModelScope.launch {
+            when (val result = repeatUseCase.repeatHabit(habit)) {
+                is Result.Success -> _showRepeatingStatus.value = ContentEvent(habit to result.data)
+                is Result.Error<*> -> _error.value = ContentEvent(result.throwable)
+            }
+        }
     }
 
     private fun updateDisplayedHabits(habits: List<Habit>) {

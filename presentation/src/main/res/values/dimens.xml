@@ -11,4 +11,6 @@
     <dimen name="nav_header_spacing">16dp</dimen>
     <dimen name="nav_header_image_spacing">8dp</dimen>
     <dimen name="nav_header_image_size">80dp</dimen>
+    <dimen name="click_area_indent">12dp</dimen>
+    <dimen name="done_habit_button_spacing">4dp</dimen>
 </resources>

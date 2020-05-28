@@ -13,11 +13,14 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.khdv.habitstracker.R
+import com.khdv.habitstracker.data.network.HabitsApiException
 import com.khdv.habitstracker.databinding.FragmentHabitListBinding
 import com.khdv.habitstracker.domain.interactors.LoadHabitsUseCase
+import com.khdv.habitstracker.domain.interactors.RepeatHabitUseCase
 import com.khdv.habitstracker.domain.models.Habit
 import com.khdv.habitstracker.presentation.ContentEventObserver
 import com.khdv.habitstracker.presentation.HabitsTrackerApplication
+import java.io.IOException
 import javax.inject.Inject
 
 class HabitListFragment : Fragment() {
@@ -33,11 +36,15 @@ class HabitListFragment : Fragment() {
 
     private val viewModel: HabitsViewModel by activityViewModels {
         val delay = resources.getInteger(R.integer.request_delay).toLong()
-        HabitsViewModelFactory(loadHabitsUseCase, delay)
+        HabitsViewModelFactory(loadHabitsUseCase, repeatHabitUseCase, delay)
     }
 
     @Inject
     lateinit var loadHabitsUseCase: LoadHabitsUseCase
+
+    @Inject
+    lateinit var repeatHabitUseCase: RepeatHabitUseCase
+
     private lateinit var listDecoration: DividerItemDecoration
     private lateinit var adapter: HabitsAdapter
 
@@ -52,7 +59,10 @@ class HabitListFragment : Fragment() {
     ): View? {
         val binding = FragmentHabitListBinding.inflate(inflater, container, false)
 
-        adapter = HabitsAdapter(HabitClickListener(viewModel::editHabit))
+        adapter = HabitsAdapter(
+            HabitClickListener(viewModel::editHabit),
+            HabitDoneListener(viewModel::repeatHabit)
+        )
 
         binding.apply {
             habitList.adapter = adapter
@@ -68,15 +78,36 @@ class HabitListFragment : Fragment() {
         val type = Habit.Type.valueOf(requireArguments().getString(HABIT_TYPE_ARGUMENT)!!)
 
         viewModel.getHabitsWithType(type).observe(viewLifecycleOwner, Observer(adapter::submitList))
-        viewModel.navigateToHabitEditing.observe(viewLifecycleOwner,
-            ContentEventObserver {
-                navigateToEditHabit(it)
-            })
-        viewModel.error.observe(viewLifecycleOwner,
-            ContentEventObserver {
-                val message = getString(R.string.connection_error_message)
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-            })
+        viewModel.showRepeatingStatus.observe(
+            viewLifecycleOwner,
+            ContentEventObserver { (habit, remainingReps) ->
+                showHabitRepeatingStatus(habit.type, remainingReps)
+            }
+        )
+        viewModel.navigateToHabitEditing.observe(viewLifecycleOwner, ContentEventObserver {
+            navigateToEditHabit(it)
+        })
+        viewModel.error.observe(viewLifecycleOwner, ContentEventObserver {
+            val message = when (it) {
+                is IOException -> getString(R.string.connection_error_message)
+                is HabitsApiException -> getString(R.string.api_error_message, it.code, it.message)
+                else -> it.localizedMessage
+            }
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        })
+    }
+
+    private fun showHabitRepeatingStatus(type: Habit.Type, remainingReps: Int) {
+        val message = when {
+            type == Habit.Type.USEFUL && remainingReps > 0 ->
+                getString(R.string.repeat_useful_habit, remainingReps)
+            type == Habit.Type.USEFUL -> getString(R.string.stop_useful_habit)
+            type == Habit.Type.HARMFUL && remainingReps > 0 ->
+                getString(R.string.repeat_harmful_habit, remainingReps)
+            type == Habit.Type.HARMFUL -> getString(R.string.stop_harmful_habit)
+            else -> return
+        }
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
     private fun navigateToEditHabit(habitId: String) {

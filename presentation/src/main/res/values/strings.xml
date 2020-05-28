@@ -29,9 +29,15 @@
     <string name="sort_priority_ascending_label">Sort habits in ascending order of priority</string>
     <string name="sort_priority_descending_label">Sort habits in descending order of priority</string>
     <string name="connection_error_message">A network problem has occurred: check your internet connection</string>
+    <string name="api_error_message">Habits Api Error [%d]: %s</string>
     <string name="delete_habit_label">Delete</string>
     <string name="app_icon_label">Application icon</string>
     <string name="icon_url">https://michaelhermann.com.au/wp-content/uploads/2014/05/Power-of-Habit-Loop.jpg</string>
+    <string name="done_habit_label">Mark the habit done</string>
+    <string name="repeat_harmful_habit">You can do it %d more times</string>
+    <string name="stop_harmful_habit">Stop doing it</string>
+    <string name="repeat_useful_habit">It is worth to do it another %d times</string>
+    <string name="stop_useful_habit">You are breathtaking!</string>
 
     <plurals name="time_label">
         <item quantity="one">time</item>

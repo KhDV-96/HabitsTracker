@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import com.khdv.habitstracker.R
 import com.khdv.habitstracker.databinding.FragmentHabitFiltersAndSortsBinding
 import com.khdv.habitstracker.domain.interactors.LoadHabitsUseCase
+import com.khdv.habitstracker.domain.interactors.RepeatHabitUseCase
 import com.khdv.habitstracker.presentation.HabitsTrackerApplication
 import javax.inject.Inject
 
@@ -17,11 +18,14 @@ class HabitFiltersAndSortsFragment : Fragment() {
 
     private val viewModel: HabitsViewModel by activityViewModels {
         val delay = resources.getInteger(R.integer.request_delay).toLong()
-        HabitsViewModelFactory(loadHabitsUseCase, delay)
+        HabitsViewModelFactory(loadHabitsUseCase, repeatHabitUseCase, delay)
     }
 
     @Inject
     lateinit var loadHabitsUseCase: LoadHabitsUseCase
+
+    @Inject
+    lateinit var repeatHabitUseCase: RepeatHabitUseCase
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

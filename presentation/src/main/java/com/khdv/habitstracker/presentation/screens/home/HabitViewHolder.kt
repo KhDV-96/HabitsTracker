@@ -11,10 +11,15 @@ class HabitViewHolder(private val binding: ItemHabitBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     companion object {
-        fun create(parent: ViewGroup, clickListener: HabitClickListener): HabitViewHolder {
+        fun create(
+            parent: ViewGroup,
+            clickListener: HabitClickListener,
+            doneListener: HabitDoneListener
+        ): HabitViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemHabitBinding.inflate(inflater, parent, false)
             binding.clickListener = clickListener
+            binding.doneListener = doneListener
             return HabitViewHolder(binding)
         }
 

@@ -13,6 +13,10 @@
         <variable
             name="clickListener"
             type="com.khdv.habitstracker.presentation.screens.home.HabitClickListener" />
+
+        <variable
+            name="doneListener"
+            type="com.khdv.habitstracker.presentation.screens.home.HabitDoneListener" />
     </data>
 
     <LinearLayout
@@ -31,12 +35,14 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/layout_padding">
+            android:paddingTop="@dimen/layout_padding"
+            android:paddingBottom="@dimen/layout_padding">
 
             <TextView
                 android:id="@+id/info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/layout_padding"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -46,12 +52,13 @@
                 android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/done_habit_button_spacing"
                 android:maxLines="1"
                 android:text="@{habit.title}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/done_habbit"
+                app:layout_constraintStart_toStartOf="@+id/info"
                 app:layout_constraintTop_toBottomOf="@+id/info"
                 tools:text="@tools:sample/lorem/random" />
 
@@ -62,10 +69,24 @@
                 android:maxLines="2"
                 android:text="@{habit.description}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/title"
+                app:layout_constraintStart_toStartOf="@+id/title"
                 app:layout_constraintTop_toBottomOf="@+id/title"
                 tools:text="@tools:sample/lorem/random" />
+
+            <ImageView
+                android:id="@+id/done_habbit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/done_habit_button_spacing"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/done_habit_label"
+                android:onClick="@{() -> doneListener.onDone(habit)}"
+                android:padding="@dimen/click_area_indent"
+                android:tint="@color/colorAccent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_check_circle_white_24dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

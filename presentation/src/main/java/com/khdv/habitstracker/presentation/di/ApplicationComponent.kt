@@ -9,7 +9,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [HabitsModule::class])
+@Component(modules = [ApplicationModule::class, HabitsModule::class])
 interface ApplicationComponent {
     fun inject(fragment: HomeFragment)
     fun inject(fragment: HabitListFragment)
