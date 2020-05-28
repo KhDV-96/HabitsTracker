@@ -1,7 +1,7 @@
 package com.khdv.habitstracker.data.repositories
 
 import com.khdv.habitstracker.data.db.HabitDao
-import com.khdv.habitstracker.data.db.HabitEntity
+import com.khdv.habitstracker.data.db.HabitWithRepetitions
 import com.khdv.habitstracker.data.mappers.toDto
 import com.khdv.habitstracker.data.mappers.toEntity
 import com.khdv.habitstracker.data.mappers.toException
@@ -33,7 +33,7 @@ class HabitsRepositoryImpl @Inject constructor(
     @ExperimentalCoroutinesApi
     override fun getAll() = flow {
         val cachedHabits = habitDao.getAll().map {
-            Result.Success(it.map(HabitEntity::toModel))
+            Result.Success(it.map(HabitWithRepetitions::toModel))
         }
         emit(cachedHabits.first())
         val result = refreshHabits()
@@ -79,7 +79,7 @@ class HabitsRepositoryImpl @Inject constructor(
 
     private suspend fun refreshHabits(): Result<Unit> = performSafely(this::refreshHabits) {
         val habits = habitsService.getHabits().map(HabitDto::toEntity)
-        habitDao.insertAll(habits)
+        habitDao.updateAll(habits)
     }
 
     private suspend fun <T, R> performSafely(

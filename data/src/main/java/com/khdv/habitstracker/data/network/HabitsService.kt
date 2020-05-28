@@ -48,9 +48,3 @@ private val errorConverter = retrofit
     .responseBodyConverter<ErrorDto>(ErrorDto::class.java, emptyArray())
 
 fun <T> Response<T>.error() = errorBody()?.let(errorConverter::convert)
-
-object HabitsApi {
-    val service: HabitsService by lazy {
-        retrofit.create(HabitsService::class.java)
-    }
-}

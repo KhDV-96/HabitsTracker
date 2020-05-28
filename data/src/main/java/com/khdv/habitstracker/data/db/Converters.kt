@@ -1,25 +1,9 @@
 package com.khdv.habitstracker.data.db
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
-import androidx.room.TypeConverters
 import com.khdv.habitstracker.domain.models.Habit
 import com.khdv.habitstracker.domain.shared.toEnum
 import java.util.*
-
-@Entity(tableName = "habits")
-data class HabitEntity(
-    @PrimaryKey val id: String,
-    val title: String,
-    val description: String,
-    @field:TypeConverters(DateConverter::class) val date: Date,
-    @field:TypeConverters(HabitPriorityConverter::class) val priority: Habit.Priority,
-    @field:TypeConverters(HabitTypeConverter::class) val type: Habit.Type,
-    val quantity: Int,
-    val periodicity: Int,
-    val color: Int
-)
 
 object HabitPriorityConverter {
 
