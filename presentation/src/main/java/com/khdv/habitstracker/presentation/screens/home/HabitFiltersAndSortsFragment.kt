@@ -7,25 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.khdv.habitstracker.R
 import com.khdv.habitstracker.databinding.FragmentHabitFiltersAndSortsBinding
-import com.khdv.habitstracker.domain.interactors.LoadHabitsUseCase
-import com.khdv.habitstracker.domain.interactors.RepeatHabitUseCase
 import com.khdv.habitstracker.presentation.HabitsTrackerApplication
 import javax.inject.Inject
 
 class HabitFiltersAndSortsFragment : Fragment() {
 
-    private val viewModel: HabitsViewModel by activityViewModels {
-        val delay = resources.getInteger(R.integer.request_delay).toLong()
-        HabitsViewModelFactory(loadHabitsUseCase, repeatHabitUseCase, delay)
-    }
+    private val viewModel: HabitsViewModel by activityViewModels { viewModelFactory }
 
     @Inject
-    lateinit var loadHabitsUseCase: LoadHabitsUseCase
-
-    @Inject
-    lateinit var repeatHabitUseCase: RepeatHabitUseCase
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -36,6 +29,8 @@ class HabitFiltersAndSortsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentHabitFiltersAndSortsBinding.inflate(inflater, container, false)
+
+        viewModel.initialize(resources.getInteger(R.integer.request_delay).toLong())
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this

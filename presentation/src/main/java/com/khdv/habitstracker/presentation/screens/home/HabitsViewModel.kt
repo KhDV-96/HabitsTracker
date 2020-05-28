@@ -10,11 +10,11 @@ import com.khdv.habitstracker.presentation.ContentEvent
 import com.khdv.habitstracker.presentation.util.Order
 import com.khdv.habitstracker.presentation.util.repeatUntilSuccess
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HabitsViewModel(
+class HabitsViewModel @Inject constructor(
     loadUseCase: LoadHabitsUseCase,
-    private val repeatUseCase: RepeatHabitUseCase,
-    private val requestDelay: Long
+    private val repeatUseCase: RepeatHabitUseCase
 ) : ViewModel() {
 
     private val requestResult = loadUseCase.loadHabits().asLiveData()
@@ -22,6 +22,7 @@ class HabitsViewModel(
     private val displayedHabits = MediatorLiveData<Sequence<Habit>>()
     private val typedHabits = mutableMapOf<Habit.Type, LiveData<List<Habit>>>()
     private val priorityOrder = MutableLiveData<Order>()
+    private var requestDelay: Long = 0
 
     val titleFilter = MutableLiveData<String>()
 
@@ -57,6 +58,10 @@ class HabitsViewModel(
         displayedHabits.addSource(habits, this::updateDisplayedHabits)
         displayedHabits.addSource(titleFilter) { habits.value?.let(this::updateDisplayedHabits) }
         displayedHabits.addSource(priorityOrder) { habits.value?.let(this::updateDisplayedHabits) }
+    }
+
+    fun initialize(requestDelay: Long) {
+        this.requestDelay = requestDelay
     }
 
     fun getHabitsWithType(type: Habit.Type) = typedHabits.getOrPut(type) {

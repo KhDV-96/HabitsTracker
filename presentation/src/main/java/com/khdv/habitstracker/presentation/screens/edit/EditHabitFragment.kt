@@ -7,11 +7,10 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.khdv.habitstracker.R
 import com.khdv.habitstracker.databinding.FragmentEditHabitBinding
-import com.khdv.habitstracker.domain.interactors.GetHabitUseCase
-import com.khdv.habitstracker.domain.interactors.ManageHabitUseCase
 import com.khdv.habitstracker.presentation.ActionEventObserver
 import com.khdv.habitstracker.presentation.ContentEventObserver
 import com.khdv.habitstracker.presentation.HabitsTrackerApplication
@@ -19,16 +18,10 @@ import javax.inject.Inject
 
 class EditHabitFragment : Fragment() {
 
-    private val viewModel: EditHabitViewModel by viewModels {
-        val delay = resources.getInteger(R.integer.request_delay).toLong()
-        EditHabitViewModelFactory(getHabitUseCase, manageHabitUseCase, args.habitId, delay)
-    }
+    private val viewModel: EditHabitViewModel by viewModels { viewModelFactory }
 
     @Inject
-    lateinit var getHabitUseCase: GetHabitUseCase
-
-    @Inject
-    lateinit var manageHabitUseCase: ManageHabitUseCase
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var requiredTextFields: List<EditText>
     private lateinit var args: EditHabitFragmentArgs
@@ -44,6 +37,7 @@ class EditHabitFragment : Fragment() {
         val binding = FragmentEditHabitBinding.inflate(inflater, container, false)
 
         args = EditHabitFragmentArgs.fromBundle(requireArguments())
+        viewModel.initialize(args.habitId, resources.getInteger(R.integer.request_delay).toLong())
 
         binding.viewModel = viewModel
         binding.saveButton.setOnClickListener { saveHabit() }

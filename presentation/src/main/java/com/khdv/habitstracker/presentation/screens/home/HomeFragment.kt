@@ -7,28 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.khdv.habitstracker.R
 import com.khdv.habitstracker.databinding.FragmentHomeBinding
-import com.khdv.habitstracker.domain.interactors.LoadHabitsUseCase
-import com.khdv.habitstracker.domain.interactors.RepeatHabitUseCase
 import com.khdv.habitstracker.presentation.ActionEventObserver
 import com.khdv.habitstracker.presentation.HabitsTrackerApplication
 import javax.inject.Inject
 
 class HomeFragment : Fragment() {
 
-    private val viewModel: HabitsViewModel by activityViewModels {
-        val delay = resources.getInteger(R.integer.request_delay).toLong()
-        HabitsViewModelFactory(loadHabitsUseCase, repeatHabitUseCase, delay)
-    }
+    private val viewModel: HabitsViewModel by activityViewModels { viewModelFactory }
 
     @Inject
-    lateinit var loadHabitsUseCase: LoadHabitsUseCase
-
-    @Inject
-    lateinit var repeatHabitUseCase: RepeatHabitUseCase
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var tabLabels: Array<String>
 
@@ -42,6 +35,8 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+        viewModel.initialize(resources.getInteger(R.integer.request_delay).toLong())
 
         binding.viewModel = viewModel
         binding.pager.adapter = HabitListPagerAdapter(this)

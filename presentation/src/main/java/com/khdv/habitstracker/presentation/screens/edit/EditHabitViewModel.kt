@@ -15,12 +15,11 @@ import com.khdv.habitstracker.presentation.util.repeatUntilSuccess
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class EditHabitViewModel(
+class EditHabitViewModel @Inject constructor(
     private val getHabitUseCase: GetHabitUseCase,
-    private val manageHabitUseCase: ManageHabitUseCase,
-    private val habitId: String?,
-    private val requestDelay: Long
+    private val manageHabitUseCase: ManageHabitUseCase
 ) : ViewModel() {
 
     companion object {
@@ -30,6 +29,8 @@ class EditHabitViewModel(
         }
     }
 
+    private var habitId: String? = null
+    private var requestDelay: Long = 0
     private lateinit var habit: Habit
     private lateinit var lastError: Throwable
     private var job: Job? = null
@@ -49,8 +50,10 @@ class EditHabitViewModel(
     val returnToHomeScreen: LiveData<ActionEvent>
         get() = _returnToHomeScreen
 
-    init {
-        habitId?.run(this::loadHabit)
+    fun initialize(habitId: String?, requestDelay: Long) {
+        this.habitId = habitId
+        this.requestDelay = requestDelay
+        if (habitId != null) loadHabit(habitId)
     }
 
     fun setType(value: Habit.Type) {

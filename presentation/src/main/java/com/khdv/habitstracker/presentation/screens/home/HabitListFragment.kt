@@ -10,13 +10,12 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.khdv.habitstracker.R
 import com.khdv.habitstracker.data.network.HabitsApiException
 import com.khdv.habitstracker.databinding.FragmentHabitListBinding
-import com.khdv.habitstracker.domain.interactors.LoadHabitsUseCase
-import com.khdv.habitstracker.domain.interactors.RepeatHabitUseCase
 import com.khdv.habitstracker.domain.models.Habit
 import com.khdv.habitstracker.presentation.ContentEventObserver
 import com.khdv.habitstracker.presentation.HabitsTrackerApplication
@@ -34,16 +33,10 @@ class HabitListFragment : Fragment() {
         }
     }
 
-    private val viewModel: HabitsViewModel by activityViewModels {
-        val delay = resources.getInteger(R.integer.request_delay).toLong()
-        HabitsViewModelFactory(loadHabitsUseCase, repeatHabitUseCase, delay)
-    }
+    private val viewModel: HabitsViewModel by activityViewModels { viewModelFactory }
 
     @Inject
-    lateinit var loadHabitsUseCase: LoadHabitsUseCase
-
-    @Inject
-    lateinit var repeatHabitUseCase: RepeatHabitUseCase
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var listDecoration: DividerItemDecoration
     private lateinit var adapter: HabitsAdapter
@@ -77,6 +70,7 @@ class HabitListFragment : Fragment() {
 
         val type = Habit.Type.valueOf(requireArguments().getString(HABIT_TYPE_ARGUMENT)!!)
 
+        viewModel.initialize(resources.getInteger(R.integer.request_delay).toLong())
         viewModel.getHabitsWithType(type).observe(viewLifecycleOwner, Observer(adapter::submitList))
         viewModel.showRepeatingStatus.observe(
             viewLifecycleOwner,

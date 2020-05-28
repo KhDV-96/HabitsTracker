@@ -4,7 +4,7 @@ import com.khdv.habitstracker.domain.services.HabitAnalyzer
 import dagger.Module
 import dagger.Provides
 
-@Module
+@Module(includes = [ViewModelModule::class])
 class ApplicationModule {
 
     @Provides
