@@ -1,4 +1,4 @@
-package com.khdv.habitstracker.domain.interactors
+package com.khdv.habitstracker.domain.repositories
 
 import com.khdv.habitstracker.domain.models.Habit
 import com.khdv.habitstracker.domain.shared.Result

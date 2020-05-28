@@ -5,10 +5,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.HTTP
-import retrofit2.http.PUT
+import retrofit2.http.*
 
 private const val BASE_URL = "https://droid-test-server.doubletapp.ru/api/"
 private const val API_TOKEN = "30b3b280-9072-424a-a89f-df6c957a5829"
@@ -23,6 +20,9 @@ interface HabitsService {
 
     @HTTP(method = "DELETE", path = "habit", hasBody = true)
     suspend fun deleteHabit(@Body habitUid: HabitUidDto)
+
+    @POST("habitDone")
+    suspend fun repeatHabit(@Body habitDone: HabitDone)
 }
 
 object AuthorizationInterceptor : Interceptor {

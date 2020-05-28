@@ -14,6 +14,12 @@ abstract class RepetitionDao {
         insertAll(repetitions.map { it.copy(habitId = habitId) })
     }
 
+    @Query("SELECT * FROM repetitions WHERE habitId = :habitId")
+    abstract suspend fun getByHabitId(habitId: String): List<Repetition>
+
+    @Insert
+    abstract suspend fun insert(repetition: Repetition)
+
     @Insert
     abstract suspend fun insertAll(repetitions: List<Repetition>)
 

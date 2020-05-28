@@ -1,6 +1,7 @@
 package com.khdv.habitstracker.domain.interactors
 
 import com.khdv.habitstracker.domain.models.Habit
+import com.khdv.habitstracker.domain.repositories.HabitsRepository
 import javax.inject.Inject
 
 class ManageHabitUseCase @Inject constructor(private val repository: HabitsRepository) {

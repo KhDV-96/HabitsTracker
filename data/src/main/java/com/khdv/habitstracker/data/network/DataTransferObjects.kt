@@ -7,19 +7,16 @@ data class HabitDto(
     val count: Int,
     val date: Long,
     val description: String,
-    @field:Json(name = "done_dates") val doneDates: List<Long>,
     val frequency: Int,
     val priority: Int,
     val title: String,
     val type: Int,
-    val uid: String
+    val uid: String,
+    @field:Json(name = "done_dates") val doneDates: List<Long> = emptyList()
 )
 
-data class HabitUidDto(
-    val uid: String
-)
+data class HabitUidDto(val uid: String)
 
-data class ErrorDto(
-    val code: Int,
-    val message: String
-)
+data class HabitDone(val date: Long, @field:Json(name = "habit_uid") val habitId: String)
+
+data class ErrorDto(val code: Int, val message: String)

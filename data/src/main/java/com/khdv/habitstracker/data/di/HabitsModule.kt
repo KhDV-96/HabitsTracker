@@ -7,7 +7,9 @@ import com.khdv.habitstracker.data.db.HabitsTrackerDatabase
 import com.khdv.habitstracker.data.network.HabitsService
 import com.khdv.habitstracker.data.network.retrofit
 import com.khdv.habitstracker.data.repositories.HabitsRepositoryImpl
-import com.khdv.habitstracker.domain.interactors.HabitsRepository
+import com.khdv.habitstracker.data.repositories.RepetitionsRepositoryImpl
+import com.khdv.habitstracker.domain.repositories.HabitsRepository
+import com.khdv.habitstracker.domain.repositories.RepetitionsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -18,6 +20,9 @@ class HabitsModule(private val context: Context) {
 
     @Provides
     fun provideHabitDao(database: HabitsTrackerDatabase) = database.habitDao()
+
+    @Provides
+    fun provideRepetitionsDao(database: HabitsTrackerDatabase) = database.repetitionDao()
 
     @Provides
     fun provideDatabase(): HabitsTrackerDatabase {
@@ -41,5 +46,8 @@ class HabitsModule(private val context: Context) {
 
         @Binds
         fun bindHabitsRepository(repository: HabitsRepositoryImpl): HabitsRepository
+
+        @Binds
+        fun bindRepetitionsRepository(repository: RepetitionsRepositoryImpl): RepetitionsRepository
     }
 }
