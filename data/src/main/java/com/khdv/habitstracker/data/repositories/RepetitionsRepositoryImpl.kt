@@ -1,8 +1,8 @@
 package com.khdv.habitstracker.data.repositories
 
+import android.util.Log
 import com.khdv.habitstracker.data.db.Repetition
 import com.khdv.habitstracker.data.db.RepetitionDao
-import com.khdv.habitstracker.data.network.HabitDone
 import com.khdv.habitstracker.data.network.HabitsService
 import com.khdv.habitstracker.data.utils.performSafely
 import com.khdv.habitstracker.domain.models.Habit
@@ -12,7 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RepetitionsRepositoryImpl @Inject constructor(
     private val repetitionDao: RepetitionDao,
     private val habitsService: HabitsService

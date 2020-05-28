@@ -17,7 +17,7 @@ data class HabitEntity(
     val color: Int
 )
 
-@Entity(tableName = "repetitions", primaryKeys = ["habitId", "date"])
+@Entity(tableName = "repetitions")
 data class Repetition(
     @ForeignKey(
         entity = HabitEntity::class,
@@ -26,7 +26,8 @@ data class Repetition(
         onDelete = ForeignKey.CASCADE
     )
     val habitId: String,
-    @field:TypeConverters(DateConverter::class) val date: Date
+    @field:TypeConverters(DateConverter::class) val date: Date,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0
 )
 
 data class HabitWithRepetitions(
