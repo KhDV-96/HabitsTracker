@@ -42,7 +42,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Core with KTX
-    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.core:core-ktx:1.3.0'
 
     // Room
     implementation "androidx.room:room-runtime:$room_version"
