@@ -13,6 +13,7 @@ import com.khdv.habitstracker.domain.repositories.RepetitionsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 
 @Module(includes = [HabitsModule.Declarations::class])
@@ -40,6 +41,9 @@ class HabitsModule(private val context: Context) {
 
     @Provides
     fun provideRetrofit() = retrofit
+
+    @Provides
+    fun provideIODispatcher() = Dispatchers.IO
 
     @Module
     interface Declarations {

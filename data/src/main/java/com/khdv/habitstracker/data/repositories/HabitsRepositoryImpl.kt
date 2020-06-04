@@ -12,6 +12,7 @@ import com.khdv.habitstracker.data.utils.performSafely
 import com.khdv.habitstracker.domain.models.Habit
 import com.khdv.habitstracker.domain.repositories.HabitsRepository
 import com.khdv.habitstracker.domain.shared.Result
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emitAll
@@ -25,7 +26,8 @@ import javax.inject.Singleton
 @Singleton
 class HabitsRepositoryImpl @Inject constructor(
     private val habitDao: HabitDao,
-    private val habitsService: HabitsService
+    private val habitsService: HabitsService,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : HabitsRepository {
 
     @ExperimentalCoroutinesApi
@@ -42,11 +44,11 @@ class HabitsRepositoryImpl @Inject constructor(
         emitAll(cachedHabits)
     }
 
-    override suspend fun getById(id: String) = withContext(Dispatchers.IO) {
+    override suspend fun getById(id: String) = withContext(ioDispatcher) {
         habitDao.getById(id).toModel()
     }
 
-    override suspend fun insert(habit: Habit): Result<*> = withContext(Dispatchers.IO) {
+    override suspend fun insert(habit: Habit): Result<*> = withContext(ioDispatcher) {
         performSafely({ insert(habit) }) {
             habitsService.updateHabit(habit.toDto())
         }.also {
@@ -57,7 +59,7 @@ class HabitsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun update(habit: Habit): Result<*> = withContext(Dispatchers.IO) {
+    override suspend fun update(habit: Habit): Result<*> = withContext(ioDispatcher) {
         performSafely({ update(habit) }) {
             habitsService.updateHabit(habit.toDto())
         }.also {
@@ -66,7 +68,7 @@ class HabitsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun delete(habit: Habit): Result<*> = withContext(Dispatchers.IO) {
+    override suspend fun delete(habit: Habit): Result<*> = withContext(ioDispatcher) {
         performSafely({ delete(habit) }) {
             habitsService.deleteHabit(HabitUidDto(habit.id))
         }.also {
